@@ -1,0 +1,131 @@
+//Souvik Dutta Choudhury
+//Employee Code:1799
+
+Q1 How does oracle rollback a statement?
+Ans:-The ROLLBACK statement undoes all changes for the current session up to the savepoint specified by savepoint_name. 
+   If this clause is omitted, then all changes are undone. Optional.It is used to force the rollback of a transaction that may be corrupt or in doubt.
+    Syntax:-The syntax for the ROLLBACK statement is:
+
+       ROLLBACK [ WORK ] [ TO [SAVEPOINT] savepoint_name  | FORCE 'string' ];
+
+
+Q2 What are consistent gets?
+Ans:- The consistent gets Oracle metric is the number of times a consistent read (a logical RAM buffer I/O) was requested to get data from a data block. 
+Part of Oracle tuning is to increase logical I/O by reducing the expensive disk I/O (physical reads), 
+but high consistent gets presents it's own tuning challenges, especially when we see super high CPU consumption.
+
+Q3 WHY DO WE NEED THREE MEMORY LAYERS - BLOCK, EXTENT AND SEGMENTS?
+Ans:- At the finest level of granularity, Oracle stores data in data blocks. 
+One data block corresponds to a specific number of bytes of physical database space on disk.
+
+The next level of logical database space is an extent. 
+An extent is a specific number of contiguous data blocks allocated for storing a specific type of information.
+
+The level of logical database storage greater than an extent is called a segment. It is a set of segments.
+
+Block,Extent and Segments are classification of memory usage area based on their sizes. Users use each of them depending upon their requirements.
+
+
+Q4 WHAT ARE FLASH BACK QUERIES?
+Ans:- Falshback, as the word in english, depicts an event from past. 
+In Oracle databases, Flashback tools allow administrators and users to view and manipulate past states of an instance's data without (destructively) recovering to a fixed point in time.
+Flashback Query allows the contents of a table to be queried with reference to a specific point in time, using the AS OF clause. 
+All the normal queries used in DBMS, are also used to flashback.
+Flashback query in oracle can be used to report on historical data or undo some erroneous changes.
+
+Flashback features that allow you to do this include:
+
+Oracle Flashback Query - retrieve data for a time in the past that you specify using the AS OF clause of the SELECT statement.
+
+Oracle Flashback Version Query - retrieve metadata and historical data for a specific time interval. 
+You can view all the rows of a table that ever existed during a given time interval. 
+Metadata about the different versions of rows includes start and end time, type of change operation, and identity of the transaction that created the row version. 
+You use the VERSIONS BETWEEN clause of the SELECT statement to create a Flashback Version Query.
+
+Oracle Flashback Transaction Query - retrieve metadata and historical data for a given transaction, or for all transactions within a given time interval. 
+You can also obtain the SQL code to undo the changes to particular rows affected by a transaction. 
+You typically use Flashback Transaction Query in conjunction with a Flashback Version Query that provides the transaction IDs for the rows of interest. 
+To perform a Flashback Transaction Query, you select from the FLASHBACK_TRANSACTION_QUERY view.
+
+DBMS_FLASHBACK package - set the clock back to a time in the past, to examine data current at that time.
+
+Q5 WHAT IS SCN?
+Ans:- SCN is the acronym of 'System Change Number'. SCN acts as the oracle clock. Everytime we commit, the clock gets incremented(records a new SCN). 
+The SCN just marks a consistent point in time in the database. Oracle uses SCNs in control files, datafile headers, and redo records. 
+
+Q6 WHAT IS AN ITL? HOW DO THEY HELP IN LOCKING?
+Ans:- ITL is the abbreviation of Interested Transaction List. Oracle keeps note of which rows are locked by 
+which transaction in an area at the top of each data block known as the ITL.The number of ITL slots in any block in an object is controlled by the INITRANS and MAXTRANS attributes. 
+INITRANS is the number of slots initially created in a block when it is first used, while MAXTRANS places an upper bound on the number of entries allowed. 
+Each transaction which wants to modify a block requires a slot in this 'ITL' list in the block.
+
+In some RDBMS vendor implementations, The manager maintains information on which row is locked by which transaction. 
+This works great in theory but when pretty soon the lock manager becomes a bottleneck as each transaction must wait to get a lock 
+from the manager and then again wait to release the lock. This of course goes against the scalability of the applications. 
+In fact, application developers of some RDBMS products despise holding locks for a long time, and often times resorting to a full table lock when all its needed is to get a few rows locked. 
+This creates further waits and scalability suffers.
+
+Q7 HOW ARE LOCALLY MANAGED TABLESPACES BETTER THAN DICTIONARY MANAGED TABLESPACES?
+Ans:- Oracle use the data dictionary (tables in the SYS schema) to track allocated and free extents for tablespaces that is in "dictionary managed" mode. 
+Free space is recorded in the SYS.FET$ table, and used space in the SYS.UET$ table. 
+Whenever space is required in one of these tablespaces, the ST (space transaction) enqueue latch must be obtained to do inserts and deletes agianst these tables. 
+As only one process can acquire the ST enque at a given time, this often lead to contention.
+Eliminates the need for recursive SQL operations against the data dictionary (UET$ and FET$ tables)
+Reduce contention on data dictionary tables (single ST enqueue)
+Locally managed tablespaces eliminate the need to periodically coalesce free space (automatically tracks adjacent free space)
+Changes to the extent bitmaps do not generate rollback information.
+
+On the other hand, Using LMT, each tablespace manages it's own free and used space within a bitmap structure stored in one of the tablespace's data files. 
+Each bit corresponds to a database block or group of blocks.
+
+
+Q8 WHAT IS A FREE LIST AND HOW DO MASTER SLAVE LISTS WORK?
+Ans:- A free list is a data structure used in a scheme for dynamic memory allocation. 
+It operates by connecting unallocated regions of memory together in a linked list, 
+using the first word of each unallocated region as a pointer to the next.
+#######
+
+Q9 WHAT IS HIGH WATER MARK? HOW DOES THIS AFFECT DATA FRAGMENTATION? SIMULATE THIS WITH AN EXAMPLE AND ALSO MENTION HOW IT CAN BE SOLVED.
+Ans:- High water mark is the boundary between used and unused space in a segment.
+Data fragmentation occurs when a collection of data in memory is broken up into many pieces that are not close together. 
+It is typically the result of attempting to insert a large object into storage that has already suffered external fragmentation.########
+
+Q10 WHAT IS ROW CHAINING? HOW DOES IT DIFFER FROM ROW MIGRATION?
+Ans:- Row chaining occurs when a row can't physically fit into an Oracle block.
+Another block is required to store the remainder of the row. 
+Chaining can cause serious performance problems and is especially prevalent with those storing multimedia data or large binary objects (blobs).
+
+Migration of an Oracle row occurs when a row is updated in an Oracle block and the amount of free space in the block is not adequate to store all of the row's data. 
+The row is migrated to another physical block in the table. 
+The problem is that the indexes that refer to the migrated row are still pointing to the block where the row used to be, and hence the table reads are doubled. 
+
+
+Q 11 WRITE A TRIGGER TO ADD A LOG ENTRY BEFORE EACH INSERT ON A TABLE, AN ENTRY SHOULD BE PRESENT EVEN IF THE INSERT OPERATION FAILS.
+Ans:- CREATE [OR REPLACE ] TRIGGER trigger_name 
+{BEFORE} 
+{INSERT} 
+[OF id] 
+ON Customers
+
+[FOR EACH ROW] 
+WHEN (NEW.id=OLD.id+1)  
+DECLARE
+   Declaration-statements
+BEGIN 
+   Executable-statements
+EXCEPTION
+   Exception-handling-statements
+END;
+
+Q 12 WHEN DOES ORACLE ISSUE TX LOCKS/TM LOCKS? EXPLAIN WITH EXAMPLES AND SNAPSHOTS OF LOCK AND TRANSACTION TABLES.
+Ans:- Row Locks (TX)
+Row-level locks are primarily used to prevent two transactions from modifying the same row. 
+When a transaction needs to modify a row, a row lock is acquired.
+
+Table Locks (TM)
+Table-level locks are primarily used to do concurrency control with concurrent DDL operations, 
+such as preventing a table from being dropped in the middle of a DML operation.
+
+Q 13 WHY DO WE CREATE INDEXES WITH ONLINE OPTION? WHAT KIND OF LOCK DOES IT CREATE? SHOW WITH AN EXAMPLE AND SNAPSHOTS FROM TRANSACTION AND LOCK TABLES?
+Ans:- In ONLINE mode the new index is built while the old index is accessible to reads and writes. any update on the old index will also get applied to the new index. 
+In OFFLINE mode the table is locked upfront for any read or write, and then the new index gets built from the old index, while holding a lock on the table.

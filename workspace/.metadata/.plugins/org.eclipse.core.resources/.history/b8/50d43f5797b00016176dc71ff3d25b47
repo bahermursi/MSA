@@ -1,0 +1,66 @@
+
+import com.chilkatsoft.*;
+
+public class ChilkatExample {
+
+  static {
+    try {
+        System.loadLibrary("chilkat");
+    } catch (UnsatisfiedLinkError e) {
+      System.err.println("Native code library failed to load.\n" + e);
+      System.exit(1);
+    }
+  }
+
+  public static void main(String argv[])
+  {
+    CkSshKey key = new CkSshKey();
+
+    boolean success;
+
+    //  Load an unencrypted or encrypted PuTTY private key.
+
+    //  If  your PuTTY private key is encrypted, set the Password
+    //  property before calling FromPuttyPrivateKey.
+    //  If your PuTTY private key is not encrypted, it makes no diffference
+    //  if Password is set or not set.
+    key.put_Password("secret");
+
+    //  First load the .ppk file into a string:
+    String keyStr;
+    keyStr = key.loadText("putty_private_key.ppk");
+
+    //  Import into the SSH key object:
+    success = key.FromPuttyPrivateKey(keyStr);
+    if (success != true) {
+        System.out.println(key.lastErrorText());
+        return;
+    }
+
+    //  Convert to an encrypted or unencrypted OpenSSH key.
+
+    //  First demonstrate converting to an unencrypted OpenSSH key
+    String unencryptedKeyStr;
+    boolean bEncrypt = false;
+    unencryptedKeyStr = key.toOpenSshPrivateKey(bEncrypt);
+    success = key.SaveText(unencryptedKeyStr,"unencrypted_openssh.pem");
+    if (success != true) {
+        System.out.println(key.lastErrorText());
+        return;
+    }
+
+    //  Save to an encrypted OpenSSH PEM file:
+    String encryptedKeyStr;
+    bEncrypt = true;
+    key.put_Password("myPassword");
+    encryptedKeyStr = key.toOpenSshPrivateKey(bEncrypt);
+    success = key.SaveText(encryptedKeyStr,"encrypted_openssh.pem");
+    if (success != true) {
+        System.out.println(key.lastErrorText());
+        return;
+    }
+
+    System.out.println("Done!");
+
+  }
+}

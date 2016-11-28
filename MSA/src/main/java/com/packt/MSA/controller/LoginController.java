@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.packt.MSA.domain.*;
-import com.packt.MSA.service.UserService;
  
 
 @Controller
@@ -23,7 +22,7 @@ public class LoginController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String viewLogin(Map<String, Object> model) {
         User user = new User();
-        model.put("userFormNew", user);
+        model.put("user", user);
         return "Home";
     }
  
@@ -38,6 +37,7 @@ public class LoginController {
         	
             return "home";
         }
+    	//System.out.println("Login Controller:"+user.getRole());
     	model.put("user", user);
         
         return "LoginSuccess";

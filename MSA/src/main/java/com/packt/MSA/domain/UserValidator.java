@@ -19,7 +19,11 @@ public class UserValidator implements Validator {
         User u=(User) obj;
         UserMetadata umd=new UserMetadata();
         try {
-			umd.getUser(u);
+			if(!umd.getUser(u)){
+				e.rejectValue("password", "error.login","Either the username or password is incorrect");
+			}
+			
+			
 		} catch (JsonParseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -30,11 +34,17 @@ public class UserValidator implements Validator {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+        //u.setRole("SUPER_USER");
+        /*
         if (!(u.getUsername().equals("souvikduttachoudhury32@gmail.com"))) {
             e.rejectValue("username", "error.username","wrong username");
         } else if (!(u.getPassword().equals("lister"))) {
             e.rejectValue("password", "error.password","wrong password");
         }
+        */ catch (CloneNotSupportedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 	
 

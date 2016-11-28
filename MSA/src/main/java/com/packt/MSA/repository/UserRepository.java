@@ -2,6 +2,9 @@ package com.packt.MSA.repository;
 import com.packt.MSA.domain.*;
 import java.util.*;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class UserRepository {
 	private int tokencount;
 	private List<User> users;

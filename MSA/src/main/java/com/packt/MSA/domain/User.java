@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
  
 
-public class User {
+public class User implements Cloneable {
     @NotEmpty
     @Email
     private String username;
@@ -16,6 +16,14 @@ public class User {
     private String password;
 
     private String role;
+    
+    public User(){
+    	
+    }
+    
+    public Object clone()throws CloneNotSupportedException{  
+    	return super.clone();  
+    }  
 
 
 	public String getRole() {

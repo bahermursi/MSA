@@ -12,7 +12,7 @@ public static void main(String[] args)
     String host = "10.106.30.98";
     int port=22;
 
-    String remoteFile="sample.txt";
+    String remoteFile="access.json";
     String privateKey = "D:/esl";
 
     
@@ -31,19 +31,37 @@ public static void main(String[] args)
         System.out.println("Connection established.");
         System.out.println("Crating SFTP Channel.");
         ChannelSftp sftpChannel = (ChannelSftp) session.openChannel("sftp");
+        //ChannelSftp sftpChannel2 = (ChannelSftp) session.openChannel("sftp");
         sftpChannel.connect();
+        //sftpChannel2.connect();
         System.out.println("SFTP Channel created.");
+        
+        /*sftpChannel.cd("Souvik/newfolder");
+        File f=new File(remoteFile);
+        sftpChannel.put(new FileInputStream(f), f.getName());*/
+        //sftpChannel.mkdir("MSA");
+        //sftpChannel.mkdir("MSA/metadata");
+        sftpChannel.cd("MSA/metadata");
+        //sftpChannel.cd("..");
+		InputStream obj_InputStream = new ByteArrayInputStream("".getBytes());
+	    sftpChannel.put(obj_InputStream,remoteFile);
         InputStream out= null;
         out= sftpChannel.get(remoteFile);
-        sftpChannel.mkdir("Souvik");
+        OutputStream in=null;
+        in=sftpChannel.put(remoteFile);
+        BufferedWriter bw = new BufferedWriter(new PrintWriter(in));
+        CreateJson cj=new CreateJson();
+		bw.write(cj.create());
+		bw.close();
         BufferedReader br = new BufferedReader(new InputStreamReader(out));
         String line;
         while ((line = br.readLine()) != null) 
-    {
+        {
             System.out.println(line);
         }
-    br.close();
-        sftpChannel.disconnect();
+        
+		br.close();
+		sftpChannel.disconnect();
         session.disconnect();
     }
     catch(JSchException | SftpException | IOException e)

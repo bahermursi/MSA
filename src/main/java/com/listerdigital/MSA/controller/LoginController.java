@@ -1,5 +1,6 @@
 package com.listerdigital.MSA.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.listerdigital.MSA.domain.*;
+import com.listerdigital.MSA.file.ClientFile;
  
 
 @Controller
@@ -43,7 +45,9 @@ public class LoginController {
     	//model.put("user", user);
     	
         model.put("ses", user);
-        
+        ClientFile clientfile=new ClientFile();
+        List<Client> clientList=clientfile.getallClients();
+        model.put("clientList", clientList);
         return "LoginSuccess";
     }
 }

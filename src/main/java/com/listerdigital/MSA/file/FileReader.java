@@ -12,7 +12,6 @@ public class FileReader {
     String host = "";
     int port=22;
     String theString="";
-    //String remoteFile="user.json";
     String privateKey = "";
     public String getJSONString(String remoteFile){
     try{

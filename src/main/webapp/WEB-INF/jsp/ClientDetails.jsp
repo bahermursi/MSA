@@ -25,54 +25,101 @@
 	href="resources/js/bootstrap.js" />
 <link rel="javascript" type="text/javascript" href="resources/js/npm.js" />
 <script type="text/javascript" src="resources/js/msacommon.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#fault").hide();
+		var eventhandler=function(e){
+			e.preventDefault();
+		}
+		$("#sub").click(function(e) {
+			$("#myform").bind("submit",eventhandler);
+			var name = $("#name").val();
+			console.log(name);
+			var input={};
+			input["name"]=name;
+			$.post("verifyClient",input , function(data, status) {
+				console.log(data);
+				//var info=JSON.parse(data);
+				//console.log(info.result);
+				if (data.result === false) {
+					console.log("Form Submitted");
+					$("#myform").unbind("submit",eventhandler);
+					$("#myform").submit();
+				} else {
+					console.log("Cant submit form");
+					$("#err").html("<label></label>Client already exists");
+					$("#fault").show();
+					$("#myform").unbind("submit",eventhandler);
+				}
+			});
+		});
+	});
+</script>
 <style>
 .content-wrapper {
 	height: 100%;
 	width: 100%;
 }
-.clientform{
-	margin-top:10%;
-}
-.form_body li:first-child{
-	margin-top:0%;
-}
-.form_body li{
-    padding-top: 10px;
-    margin-top: 2.5%;
-    list-style:none;
-    height:25px;
-    color:#003399;
-    font-size:20px;
-}
-.form_body li label{
-	width:25%;
+
+.clientform {
+	margin-top: 10%;
 }
 
-.form_body li:last-child{
-    margin-left:40%;
-    margin-top: 30px;
+.form_body li:first-child {
+	margin-top: 0%;
 }
-.field{
-    position: absolute;
-    margin-left:2.5%;
-    width: 60%;
-    height: 30px;
-    border-radius: 4px;
-    box-shadow: 0 1px 1px 0.5px;
+
+.form_body li {
+	padding-top: 10px;
+	margin-top: 2.5%;
+	list-style: none;
+	height: 25px;
+	color: #003399;
+	font-size: 20px;
+}
+
+.form_body li label {
+	width: 25%;
+}
+
+.form_body li .error {
+	color: red;
+	font-size: 15px;
+	padding-left: 3%;
+}
+
+.form_body #fault .err {
+	color: red;
+	font-size: 15px;
+	padding-left: 3%;
+}
+
+.form_body li:last-child {
+	margin-left: 40%;
+	margin-top: 30px;
+}
+
+.field {
+	position: absolute;
+	margin-left: 2.5%;
+	width: 60%;
+	height: 30px;
+	border-radius: 4px;
+	box-shadow: 0 1px 1px 0.5px;
 }
 </style>
 </head>
 <body background="resources/images/bck.jpg">
 	<div class="wrapper">
 		<header>
-			<img id="oracle" class="oracle" src="resources/images/img3.png" /> 
-			<img id="logo" class="logo" src="resources/images/img1.png" />
+			<img id="oracle" class="oracle" src="resources/images/img3.png" /> <img
+				id="logo" class="logo" src="resources/images/img1.png" />
 			<div id="page_title">Mail Storage Administration</div>
 			<ul>
 				<li style="display: inline-block; list-style: none"><h4>Welcome
 						${ses.username}!</h4></li>
 				<li
-					style="display: inline-block; list-style: none; padding-left: 45%"><h4>${ses.role}</h4></li>
+					style="display: inline-block; list-style: none; padding-left: 60%"><h4>${ses.role}</h4></li>
 			</ul>
 		</header>
 		<div class="content-wrapper">
@@ -80,20 +127,20 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-lg-9">
-							<form:form id='myform' action="CreateClient" modelAttribute="client">
+							<form:form id='myform' action="CreateClient"
+								modelAttribute="client">
 								<div class='form_body' id='form'>
 									<ul>
-										<li><label>Name</label><form:input id="name" path="name"
+										<li><label>Name</label> <form:input id="name" path="name"
 												placeholder="                Enter Client's Name"
 												onfocus="foc(this.id)" onblur="focout(this.id)"
-												cssClass="field" />
-										</li>
+												cssClass="field" /></li>
+										<li id="fault"><div id="err" Class="err" style="color: red; font-size: 20px; padding-left: 3%"></div></li>
 										<li><form:errors path="name" cssClass="error" /></li>
-										<li><label>BCC Address</label><form:input cssClass="field"
-												id="bcc" path="bcc"
+										<li><label>BCC Address</label> <form:input
+												cssClass="field" id="bcc" path="bcc"
 												placeholder="                Enter Client's BCC"
-												onfocus="foc(this.id)" onblur="focout(this.id)" />
-										</li>
+												onfocus="foc(this.id)" onblur="focout(this.id)" /></li>
 										<li><form:errors path="bcc" cssClass="error" /></li>
 										<li>
 											<button class="btn btn-primary btn-lg" id="sub" type="submit">Create</button>

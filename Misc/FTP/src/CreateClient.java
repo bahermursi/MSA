@@ -1,6 +1,7 @@
 import com.jcraft.jsch.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 import org.apache.commons.io.IOUtils;
@@ -52,7 +53,7 @@ public class CreateClient {
 			
 			sftpChannel1.cd("MSA/metadata");
 			Client c1=new Client();
-			c1.setName("Amazon");
+			c1.setName("Flipkart");
 			c1.setBcc(c1.getName().toLowerCase()+"@listerdigital.com");
 			c1.setImagePath("resources/images/"+c1.getName()+".jpg");
 			create(sftpChannel,sftpChannel1,c1);
@@ -67,8 +68,19 @@ public class CreateClient {
 	public static void create(ChannelSftp sftpChannel,ChannelSftp sftpChannel1,Client cl) throws SftpException, IOException{
 		mailcount=0;
 		cl.setTotal_mails(getMails(sftpChannel,cl.getName()));
+		try{
 		cl.setLastUpdated(sftpChannel.lstat(cl.getName()).getMtimeString());
+		}
+		catch(Exception e){
+			Date d=new Date();
+			cl.setLastUpdated(d.toString());
+		}
+		try{
 		cl.setFolderSize(sftpChannel.lstat(cl.getName()).getSize());
+		}
+		catch(Exception e){
+			cl.setFolderSize(0);
+		}
 		setJson(sftpChannel,sftpChannel1,cl,cl.getName());
 	}
 	public static int getMails(ChannelSftp sftpChannel,String fname) throws SftpException{
@@ -86,7 +98,7 @@ public class CreateClient {
 					}
 				}
 				if(count==0){
-					System.out.println("Inside count");
+					//System.out.println("Inside count");
 					for(ChannelSftp.LsEntry file1 : list1){
 						if(!file1.getAttrs().isDir()){
 							mailcount++;
@@ -108,11 +120,15 @@ public class CreateClient {
 		return mailcount;
 	}
 	public static void setJson(ChannelSftp sftpChannel,ChannelSftp sftpChannel1,Client cl,String fname) throws SftpException, IOException{
-		Vector<ChannelSftp.LsEntry> list = sftpChannel.ls("*");
+		//Vector<ChannelSftp.LsEntry> list = sftpChannel.ls("*");
+		/*
 		for (ChannelSftp.LsEntry oListItem : list) {
 			if (oListItem.getAttrs().isDir()) {
 			if (oListItem.getFilename().equals(fname)){ //Key Factor
-				//sftpChannel.cd(fname);
+				
+				
+		*/
+		//sftpChannel.cd(fname);
 				/*
 				try{
 					sftpChannel1.cd(fname);
@@ -170,9 +186,12 @@ public class CreateClient {
 				}*/
 						//sftpChannel.cd("..");
 						//sftpChannel1.cd("..");
+		/*				
 					}
 				}//sftpChannel.cd("..");
 			}
+			
+		*/	
 	}
 	public static String getClientJson(Client cl,String theString) throws IOException{
 		ObjectMapper mapper = new ObjectMapper();

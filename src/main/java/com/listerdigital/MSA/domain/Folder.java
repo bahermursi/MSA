@@ -11,7 +11,7 @@ public class Folder {
 	public String getName() {
 		return name;
 	}
-	public void setClient(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 	

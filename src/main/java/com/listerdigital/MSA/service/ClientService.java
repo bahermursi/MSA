@@ -1,5 +1,6 @@
 package com.listerdigital.MSA.service;
 import com.jcraft.jsch.*;
+import java.sql.*;
 import org.slf4j.Logger;
 import com.listerdigital.MSA.domain.*;
 import com.listerdigital.MSA.repository.*;
@@ -21,13 +22,44 @@ public class ClientService {
 	public static int mailcount;
 	 //sftpChannel;
 	//ChannelSftp sftpChannel1;
+	String user = "";
+	String password = "";
+	String host = "";
+	int port;
+	String privateKey = "";
+	public ClientService(){
+		 try{
+		    	Class.forName("oracle.jdbc.driver.OracleDriver");
+			    Connection con=DriverManager.getConnection("jdbc:oracle:thin:@10.106.20.63:1521:dexter","training5","training5");
+			    PreparedStatement ps=con.prepareStatement("Select * from sshcredentials_msa");
+			    ResultSet rs=ps.executeQuery();
+			    while(rs.next()){
+			    	user=rs.getString(1);
+			    	host=rs.getString(2);
+			    	port=Integer.parseInt(rs.getString(3));
+			    	privateKey=rs.getString(4);
+			    }
+		    }
+		    catch(Exception e){
+		    	e.printStackTrace();
+		    }
+	};
 	public ClientService(Client c1) throws IOException{
-		String user = "easol_user";
-		String password = "";
-		String host = "10.106.30.98";
-		int port = 22;
-        String remoteFile = "access.json";
-		String privateKey = "D:/esl";
+		try{
+	    	Class.forName("oracle.jdbc.driver.OracleDriver");
+		    Connection con=DriverManager.getConnection("jdbc:oracle:thin:@10.106.20.63:1521:dexter","training5","training5");
+		    PreparedStatement ps=con.prepareStatement("Select * from sshcredentials_msa");
+		    ResultSet rs=ps.executeQuery();
+		    while(rs.next()){
+		    	user=rs.getString(1);
+		    	host=rs.getString(2);
+		    	port=Integer.parseInt(rs.getString(3));
+		    	privateKey=rs.getString(4);
+		    }
+	    }
+	    catch(Exception e){
+	    	e.printStackTrace();
+	    }
 		try {
 			JSch jsch = new JSch();
 			jsch.addIdentity(privateKey);
@@ -229,5 +261,58 @@ public class ClientService {
 			return (mapper.writerWithDefaultPrettyPrinter().writeValueAsString(clientTable));
 
 		}
+	}
+	public  boolean clientExists(String cname) throws IOException{
+		try {
+			JSch jsch = new JSch();
+			jsch.addIdentity(privateKey);
+			Session session = jsch.getSession(user, host, port);
+			session.setPassword(password);
+			java.util.Properties config = new java.util.Properties();
+			config.put("StrictHostKeyChecking", "no");
+			session.setConfig(config);
+			Logger logger=LoggerFactory.getLogger(ClientService.class);
+			logger.info("Establishing Connection...");
+			session.connect();
+			logger.info("Connection established.");
+			logger.info("Creating SFTP Channel.");
+			ChannelSftp sftpChannel = (ChannelSftp) session.openChannel("sftp");
+			
+			sftpChannel.connect();
+			
+			logger.info("SFTP Channel created.");
+			Session session1 = jsch.getSession(user, host, port);
+			session1.setPassword(password);
+			java.util.Properties config1 = new java.util.Properties();
+			config1.put("StrictHostKeyChecking", "no");
+			session1.setConfig(config1);
+			session1.connect();
+			ChannelSftp sftpChannel1 = (ChannelSftp) session1.openChannel("sftp");
+			
+			sftpChannel1.connect();
+			sftpChannel.cd("MSA");
+			
+			sftpChannel1.cd("MSA/metadata");
+			InputStream out= null;
+	        out= sftpChannel1.get("client.json");
+	        String theString = IOUtils.toString(out,"UTF-8");
+	        sftpChannel.disconnect();
+			session.disconnect();
+			sftpChannel1.disconnect();
+			session1.disconnect();
+	        ObjectMapper mapper=new ObjectMapper();
+	        ClientRepository cr=mapper.readValue(theString, ClientRepository.class);
+	        List<Client> list=cr.getClient();
+	        for(int i=0;i<list.size();i++){
+	        	if(cname.equals(list.get(i).getName())){
+	        		return true;
+	        	}
+	        }
+	        return false;
+		} 
+		catch (JSchException | SftpException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

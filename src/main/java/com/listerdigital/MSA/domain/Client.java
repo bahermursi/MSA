@@ -1,6 +1,7 @@
 package com.listerdigital.MSA.domain;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import java.text.*;
 
 public class Client {
 	@NotEmpty(message="Client Name cannot be left empty")
@@ -12,6 +13,24 @@ public class Client {
 	private String lastUpdated;
 	private int total_mails;
 	private String imagePath;
+	private long allocated=1024;
+	private String percentageConsumed="0.00";
+	public String getPercentageConsumed() {
+		return percentageConsumed;
+	}
+	public void setPercentageConsumed() {
+		double fs=(double)this.folderSize;
+		double alc=(double)this.allocated;
+		double res=(fs/alc)*100;
+		DecimalFormat df = new DecimalFormat("#.##");
+		this.percentageConsumed=df.format(res);
+	}
+	public long getAllocated() {
+		return allocated;
+	}
+	public void setAllocated(long allocated) {
+		this.allocated = allocated;
+	}
 	public String getName() {
 		return name;
 	}
@@ -48,5 +67,4 @@ public class Client {
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
 	}
-	
 }

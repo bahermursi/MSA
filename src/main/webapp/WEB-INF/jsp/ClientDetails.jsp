@@ -28,32 +28,81 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("#fault").hide();
-		var eventhandler=function(e){
+		var eventhandler = function(e) {
 			e.preventDefault();
 		}
+		$("#upd").click(function(e) {
+			$("#myform").bind("submit", eventhandler);
+			$("#uploadlogo").bind("submit", eventhandler);
+			$("#uploadlogo").submit();
+			$("#uploadlogo").unbind("submit", eventhandler);
+			$("#myform").unbind("submit", eventhandler);
+		});
 		$("#sub").click(function(e) {
-			$("#myform").bind("submit",eventhandler);
+			$("#myform").bind("submit", eventhandler);
 			var name = $("#name").val();
 			console.log(name);
-			var input={};
-			input["name"]=name;
-			$.post("verifyClient",input , function(data, status) {
+			var input = {};
+			input["name"] = name;
+			$.post("verifyClient", input, function(data, status) {
 				console.log(data);
 				//var info=JSON.parse(data);
 				//console.log(info.result);
 				if (data.result === false) {
 					console.log("Form Submitted");
-					$("#myform").unbind("submit",eventhandler);
+					$("#myform").unbind("submit", eventhandler);
 					$("#myform").submit();
 				} else {
 					console.log("Cant submit form");
 					$("#err").html("<label></label>Client already exists");
 					$("#fault").show();
-					$("#myform").unbind("submit",eventhandler);
+					$("#myform").unbind("submit", eventhandler);
 				}
 			});
 		});
+		$(".clientform").mouseover(function() {
+			var id = $(this).attr('id');
+			//console.log(id);
+			formfocus(id);
+		});
+		$(".clientform").mouseout(function() {
+			var id = $(this).attr('id');
+			//console.log(id);
+			formdefocus(id);
+		});
+		$("header ul li").mouseover(function() {
+			var id = $(this).attr('id');
+			//console.log(id);
+			focus(id);
+		});
+		$("header ul li").mouseout(function() {
+			var id = $(this).attr('id');
+			console.log(id);
+			defocus(id);
+		});
 	});
+	function focus(id) {
+		document.getElementById(id).style.boxShadow = "0px 8px 8px 4px";
+		document.getElementById(id).style.backgroundColor = "#ff471a";
+	}
+	function defocus(id) {
+		//console.log("#"+id);
+		document.getElementById(id).style.boxShadow = "0px 0px 0px 0px";
+		document.getElementById(id).style.backgroundColor = "#000000";
+	}
+	function formfocus(id) {
+		document.getElementById(id).style.boxShadow = "0px 8px 8px 4px";
+		//document.getElementById(id).style.backgroundColor = "#9ef8b2";
+		document.getElementById(id).style.backgroundImage = "url('resources/images/bck.jpg')";
+		document.getElementById(id).style.backgroundRepeat = "repeat";
+	}
+	function formdefocus(id) {
+		//console.log("#"+id);
+		document.getElementById(id).style.boxShadow = "0px 0px 0px 0px";
+		//document.getElementById(id).style.backgroundColor = "#ffffff";
+		document.getElementById(id).style.backgroundImage = "none";
+		document.getElementById(id).style.backgroundRepeat = "no-repeat";
+	}
 </script>
 <style>
 .content-wrapper {
@@ -62,11 +111,19 @@
 }
 
 .clientform {
-	margin-top: 10%;
+	margin-top: 5%;
+	padding-top: 3.5%;
+	padding-bottom: 3.5%;
+	border-radius: 7px;
+	width: 80%;
+	height: 80%;
+	margin-left: 10%;
+	margin-bottom: 5%;
 }
 
 .form_body li:first-child {
 	margin-top: 0%;
+	padding-top: 2.5%;
 }
 
 .form_body li {
@@ -80,6 +137,9 @@
 
 .form_body li label {
 	width: 25%;
+	color: black;
+	font-weight: normal;
+	font-family: Times New Roman;
 }
 
 .form_body li .error {
@@ -109,21 +169,28 @@
 }
 </style>
 </head>
-<body background="resources/images/bck.jpg">
+<body>
 	<div class="wrapper">
 		<header>
 			<img id="oracle" class="oracle" src="resources/images/img3.png" /> <img
 				id="logo" class="logo" src="resources/images/img1.png" />
 			<div id="page_title">Mail Storage Administration</div>
 			<ul>
-				<li style="display: inline-block; list-style: none"><h4>Welcome
-						${ses.username}!</h4></li>
-				<li
-					style="display: inline-block; list-style: none; padding-left: 60%"><h4>${ses.role}</h4></li>
+
+				<li id="${ses.username}"
+					style="display: inline-block; list-style: none"><h4>
+						<span class="glyphicon glyphicon-user" style="color: white"
+							aria-hidden="true"></span>&nbsp;&nbsp; ${ses.username}!
+					</h4></li>
+				<li id="${ses.role}"
+					style="display: inline-block; list-style: none; margin-left: 60%"><h4>
+						<span class="glyphicon glyphicon-king" style="color: white"
+							aria-hidden="true"></span>&nbsp;&nbsp;${ses.role}
+					</h4></li>
 			</ul>
 		</header>
 		<div class="content-wrapper">
-			<div class="clientform">
+			<div class="clientform" id="clientform">
 				<div class="container">
 					<div class="row">
 						<div class="col-lg-9">
@@ -135,13 +202,25 @@
 												placeholder="                Enter Client's Name"
 												onfocus="foc(this.id)" onblur="focout(this.id)"
 												cssClass="field" /></li>
-										<li id="fault"><div id="err" Class="err" style="color: red; font-size: 20px; padding-left: 3%"></div></li>
+										<li id="fault"><div id="err" Class="err"
+												style="color: red; font-size: 20px; padding-left: 3%"></div></li>
 										<li><form:errors path="name" cssClass="error" /></li>
 										<li><label>BCC Address</label> <form:input
 												cssClass="field" id="bcc" path="bcc"
 												placeholder="                Enter Client's BCC"
 												onfocus="foc(this.id)" onblur="focout(this.id)" /></li>
 										<li><form:errors path="bcc" cssClass="error" /></li>
+										<li><label>Allocated Size</label> <form:input
+												type="number" cssClass="field" id="allocated"
+												path="allocated"
+												placeholder="                Allocate Size in bytes"
+												onfocus="foc(this.id);" onblur="focout(this.id)" /></li>
+										<li><form:errors path="imagePath" cssClass="error" /></li>
+										<li><label>Logo</label> <form:input cssClass="field"
+												id="imagePath" path="imagePath"
+												placeholder="                Enter logo URL"
+												onfocus="foc(this.id)" onblur="focout(this.id)" /></li>
+										<li><form:errors path="imagePath" cssClass="error" /></li>
 										<li>
 											<button class="btn btn-primary btn-lg" id="sub" type="submit">Create</button>
 										</li>

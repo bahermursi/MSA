@@ -36,10 +36,15 @@ header{
 	height:10%;
 	background-color:white;
 	display:inline-block;
+	background-color:#000000;
 }
 header ul li{
 	display:inline-block;
 	list-style:none;
-	color:red;
+	color:white;
+	padding:4px;
+	border-radius:5px;
+	margin-top:7.5px;
+	margin-bottom:1px;
 }
 

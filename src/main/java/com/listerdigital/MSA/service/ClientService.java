@@ -93,7 +93,10 @@ public class ClientService {
 			if(c1.getBcc().equals("")){
 			c1.setBcc(c1.getName().toLowerCase()+"@listerdigital.com");
 			}
+			if(c1.getImagePath().equals("")){
 			c1.setImagePath("resources/images/"+c1.getName()+".jpg");
+			}
+			c1.setPercentageConsumed();
 			create(sftpChannel,sftpChannel1,c1);
 			sftpChannel.disconnect();
 			session.disconnect();
@@ -105,6 +108,7 @@ public class ClientService {
 	}
 	public static void create(ChannelSftp sftpChannel,ChannelSftp sftpChannel1,Client cl) throws SftpException, IOException{
 		mailcount=0;
+		cl.setTotal_mails(getMails(sftpChannel,cl.getName()));
 		try{
 			cl.setLastUpdated(sftpChannel.lstat(cl.getName()).getMtimeString());
 			}

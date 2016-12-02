@@ -29,6 +29,8 @@ import com.listerdigital.MSA.domain.*;
 public class ClientController {
 	Logger logger=LoggerFactory.getLogger(ClientController.class);
 	
+	String imagepath="";
+	
 	@RequestMapping(value = "/ClientDetails")
     public String clientDetails(@ModelAttribute(value ="ses") User user, Map<String, Object> model) {
         
@@ -65,4 +67,18 @@ public class ClientController {
 		logger.info(jsonString);
 		return jsonString;
 	}
+	/*
+	@RequestMapping(value = "/uploadclientlogo",produces=MediaType.)
+	public void updlogo(@Valid @ModelAttribute(value="client") Client client,BindingResult result,Map<String, Object> model) throws IOException{
+		if (result.hasErrors()){  	
+            return "ClientDetails";
+        }
+		FolderService fs=new FolderService();
+		fs.createFolder("MSA", client.getName());
+		FolderService updatefolder=new FolderService();
+		ClientService cs=new ClientService(client);
+		model.put("client", client);
+		return "ClientCreated";
+	}
+	*/
 }

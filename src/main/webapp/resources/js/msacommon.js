@@ -14,6 +14,10 @@ function box(){
                 document.getElementById("login_form").style.boxShadow="0 0px 0px 0px";
             }
             function foc(id){
+            	if(id=="allocated"){
+            		$("#allocated").removeAttr("type");
+            		$("#allocated").removeAttr("type","number");
+            	}
                 document.getElementById(id).style.boxShadow="2px 8px 8px 2px";
                 //document.getElementById(id).style.color="red";
             }
@@ -39,5 +43,6 @@ function box(){
                    document.getElementById("ip2").onfocus=foc("ip2");
                    document.getElementById("ip2").onblur=focout("ip2");
                    */
+                   
                 });
             });

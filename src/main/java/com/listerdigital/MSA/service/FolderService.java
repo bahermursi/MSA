@@ -55,7 +55,7 @@ public class FolderService {
 			System.out.println("Establishing Connection...");
 			session.connect();
 			System.out.println("Connection established.");
-			System.out.println("Crating SFTP Channel.");
+			System.out.println("Creating SFTP Channel.");
 			ChannelSftp sftpChannel = (ChannelSftp) session.openChannel("sftp");
 
 			sftpChannel.connect();

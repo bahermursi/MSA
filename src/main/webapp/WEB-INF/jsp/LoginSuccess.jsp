@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -127,7 +128,7 @@ nav li {
 			<div class="row">
 				<c:forEach items="${clientList}" var="client">
 					<div class="col-sm-6 col-md-3"
-						style="padding-bottom: 15px; height: 400px">
+						style="padding-bottom: 15px; height: 500px">
 						<div class="thumbnail" id="${client.name}" onfocus="foc(this.id)"
 							onblur="focout(this.id)">
 							<div class="caption">
@@ -186,6 +187,13 @@ nav li {
 												${client.percentageConsumed}%</div>
 										</div>
 									</c:if>
+								</p>
+								<p>
+									<form id="manage" action="managefolders">
+										<input type="hidden" name="fname" value="${client.name}">
+										<button type="submit" id="mng" class="btn btn-success btn-md"><span class="glyphicon glyphicon-folder-open" style="color: white"
+							aria-hidden="true"></span>&nbsp;&nbsp;Manage</button>
+								   	</form>
 								</p>
 							</div>
 						</div>

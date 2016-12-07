@@ -1,5 +1,6 @@
 package com.listerdigital.MSA.domain;
 
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import java.text.*;
 
@@ -7,8 +8,9 @@ public class Client {
 	@NotEmpty(message="Client Name cannot be left empty")
 	private String name;
 	
-	
+	@Email
 	private String bcc;
+	
 	private long folderSize;
 	private String lastUpdated;
 	private int total_mails;

@@ -18,7 +18,7 @@ import com.listerdigital.MSA.file.ClientFile;
  
 
 @Controller
-@SessionAttributes("ses")
+@SessionAttributes({"ses","clientList"})
 public class LoginController {
 	
 	
@@ -49,5 +49,13 @@ public class LoginController {
         List<Client> clientList=clientfile.getallClients();
         model.put("clientList", clientList);
         return "LoginSuccess";
+    }
+    
+    @RequestMapping(value = "/homepage")
+    public String gohome(Map<String, Object> model) {
+    	ClientFile clientfile=new ClientFile();
+        List<Client> clientList=clientfile.getallClients();
+        model.put("clientList", clientList);
+    	return "LoginSuccess";
     }
 }

@@ -184,8 +184,8 @@
 					</h4></li>
 				<li id="${ses.role}"
 					style="display: inline-block; list-style: none; margin-left: 60%"><h4>
-						<span class="glyphicon glyphicon-king" style="color: white"
-							aria-hidden="true"></span>&nbsp;&nbsp;${ses.role}
+						<a href="homepage" class="glyphicon glyphicon-home" style="text-decoration:none;color: white"
+							aria-hidden="true"></a>&nbsp;&nbsp;${ses.role}
 					</h4></li>
 			</ul>
 		</header>
@@ -210,11 +210,17 @@
 												placeholder="                Enter Client's BCC"
 												onfocus="foc(this.id)" onblur="focout(this.id)" /></li>
 										<li><form:errors path="bcc" cssClass="error" /></li>
-										<li><label>Allocated Size</label> <form:input
+										<li><label>Allocated Size</label> <form:select
 												type="number" cssClass="field" id="allocated"
 												path="allocated"
 												placeholder="                Allocate Size in bytes"
-												onfocus="foc(this.id);" onblur="focout(this.id)" /></li>
+												onfocus="foc(this.id);" onblur="focout(this.id)" >
+												<option value="1024">1MB</option>
+											    <option value="10240">10MB</option>
+											    <option value="51200">50MB</option>
+											    <option value="102400">100MB</option>
+											    <option value="1048576">1GB</option>
+												</form:select></li>
 										<li><form:errors path="imagePath" cssClass="error" /></li>
 										<li><label>Logo</label> <form:input cssClass="field"
 												id="imagePath" path="imagePath"

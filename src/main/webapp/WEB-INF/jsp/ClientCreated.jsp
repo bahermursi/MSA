@@ -75,9 +75,11 @@
 	font-size: 15px;
 	padding-left: 3%;
 }
-
+.form_body li:nth-child(2) {
+	margin-left: 37.5%;
+}
 .form_body li:last-child {
-	margin-left: 40%;
+	margin-left: 37.5%;
 	margin-top: 30px;
 }
 
@@ -106,8 +108,8 @@
 					</h4></li>
 				<li id="${ses.role}"
 					style="display: inline-block; list-style: none; margin-left: 60%"><h4>
-						<span class="glyphicon glyphicon-king" style="color: white"
-							aria-hidden="true"></span>&nbsp;&nbsp;${ses.role}
+						<a href="homepage" class="glyphicon glyphicon-king" style="text-decoration:none;color: white"
+							aria-hidden="true"></a>&nbsp;&nbsp;${ses.role}
 					</h4></li>
 			</ul>
 		</header>
@@ -120,8 +122,8 @@
 							<div class="form_body">
 								<ul>
 									<li><img src="${client.imagePath}" style="height:100px;width:100px"/></li>
-									<li><label>Name</label><label>${client.name}</label></li>
-									<li><label>BCC Address</label><label>${client.bcc}</label></li>
+									<li><label>Name:</label>&nbsp;<label style="color:blue">${client.name}</label></li>
+									<li><label>BCC Address:</label>&nbsp;<label style="color:blue">${client.bcc}</label></li>
 								</ul>
 							</div>
 						</div>

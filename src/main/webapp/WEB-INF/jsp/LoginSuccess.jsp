@@ -27,8 +27,8 @@
 	href="resources/js/bootstrap.js" />
 <link rel="javascript" type="text/javascript" href="resources/js/npm.js" />
 <script type="text/javascript">
-	$(document).ready(function() {
-		$(".thumbnail").mouseover(function() {
+	$(document).ready(function(){
+		$(".thumbnail").mouseover(function(){
 			var id = $(this).attr('id');
 			//alert(id);
 			foc(id);
@@ -113,16 +113,18 @@ nav li {
 							aria-hidden="true"></span>&nbsp;&nbsp; ${ses.username}!
 					</h4></li>
 				<li id="${ses.role}"
-					style="display: inline-block; list-style: none; margin-left: 60%"><h4><span class="glyphicon glyphicon-king" style="color: white"
-							aria-hidden="true"></span>&nbsp;&nbsp;${ses.role}</h4></li>
+					style="display: inline-block; list-style: none; margin-left: 60%"><h4><a href="homepage" class="glyphicon glyphicon-home" style="text-decoration:none;color: white"
+							aria-hidden="true"></a>&nbsp;&nbsp;${ses.role}</h4></li>
 			</ul>
 		</header>
+		<c:if test="${ses.role=='SUPER_USER'}">
 		<nav>
 			<ul>
 				<li><button role="button" class="btn btn-primary btn-lg"
 						onclick="navigate()">Create New Client</button></li>
 			</ul>
 		</nav>
+		</c:if>
 		<section class="container">
 
 			<div class="row">
@@ -195,6 +197,7 @@ nav li {
 							aria-hidden="true"></span>&nbsp;&nbsp;Manage</button>
 								   	</form>
 								</p>
+								
 							</div>
 						</div>
 					</div>

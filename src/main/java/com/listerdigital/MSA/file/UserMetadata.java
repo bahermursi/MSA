@@ -20,27 +20,6 @@ public class UserMetadata {
 		FileReader fr=new FileReader();
 		ObjectMapper mapper = new ObjectMapper();
 		
-		//List<User> userList=mapper.readValue(, valueType)
-		//List<User> list = mapper.readValue(fr.getJSONString(), TypeFactory.defaultInstance().constructCollectionType(List.class, User.class));
-		/*
-		UserService userv=new UserService();
-        userv.registerUser(u);
-        */
-		
-		
-		//Mapper to Access Repository
-		
-		/*
-		AccessRepository acs=mapper.readValue(fr.getJSONString("access.json"), AccessRepository.class);
-		
-		List<Access> aclist;
-		aclist=acs.getAccess();
-		
-		int token=acs.getTokencount();
-		
-		System.out.println(token);
-		*/
-		
 		List<User> list;
 		
 		UserRepository usr=mapper.readValue(fr.getJSONString("user.json"), UserRepository.class);
@@ -48,8 +27,6 @@ public class UserMetadata {
 		
 		list=usr.getUsers();
 		
-		//u.setRole("UMD");
-		//System.out.println(list.get(0).getRole());
 		
 		for(int i=0;i<usr.getTokencount();i++){
 			if(u.getUsername().equals(list.get(i).getUsername()) && u.getPassword().equals(list.get(i).getPassword())){

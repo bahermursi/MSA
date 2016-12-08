@@ -81,4 +81,15 @@ public class ClientController {
 		return "ClientCreated";
 	}
 	*/
+	
+	@RequestMapping(value = "/deleteClient")
+	public String deleteclient(@RequestParam String cname,Model model) throws IOException{
+		ClientService cs=new ClientService();
+		System.out.println(cname);
+		cs.deleteClient(cname);
+		FolderService fs=new FolderService();
+		fs.removeFolder("MSA", cname);
+		fs=new FolderService();
+		return "redirect:/homepage";
+	}
 }

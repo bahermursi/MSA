@@ -2,6 +2,9 @@ package com.listerdigital.MSA.controller;
 
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,14 +15,11 @@ import com.listerdigital.MSA.domain.User;
 import com.listerdigital.MSA.service.FolderService;
 
 @Controller
-@SessionAttributes("name")
-public class HomeController {
-@RequestMapping(value="/")
-public String welcome(Model model) throws IOException {
-	model.addAttribute("greeting", "Getting Started");
-	User user = new User();
-    model.addAttribute("user", user);
-    model.addAttribute("name","MSA");
-	return "home";
-}
+public class LogoutController {
+	@RequestMapping(value="/logout")
+	public String logout(HttpServletRequest request){
+		HttpSession httpSession = request.getSession();
+        httpSession.invalidate();
+		return "redirect:/";
+	}
 }

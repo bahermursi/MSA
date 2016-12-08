@@ -24,6 +24,11 @@
 <link rel="javascript" type="text/javascript"
 	href="resources/js/bootstrap.js" />
 <link rel="javascript" type="text/javascript" href="resources/js/npm.js" />
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 <script>
 	var home="<%=(String)request.getAttribute("currentdir")%>";
 	var currentdir=home;
@@ -46,7 +51,7 @@
 				var cover="<section class='container'><div class='row'>";
 				var str=""
 				for(var i=0;i<data.folders.length;i++){
-					str=str+"<div class='col-sm-4 col-md-2' style='padding-bottom: 15px; height: 100px'> <p><a href='#' id='browse' rel='"+data.folders[i]+"'><span class='glyphicon glyphicon-folder-open' style='text-decoration:none;color:#ffd11a;font-size:100px' aria-hidden='true'></span></a></p> <p id='fname' style='text-decoration:none;font-size:22.5px;padding-left:2%'>"+data.folders[i]+"</p><p><button id='rem/"+data.folders[i]+"' onclick='remove(this.id)' class='btn btn-danger btn-md'><span class='glyphicon glyphicon-remove' style='text-decoration:none;color:white' aria-hidden='true'></span>&nbsp;Remove</button></p></div>";
+					str=str+"<div class='col-sm-4 col-md-2' style='padding-bottom: 15px; height: 300px'> <p><a href='#' id='browse' rel='"+data.folders[i]+"'><span class='glyphicon glyphicon-folder-open' style='text-decoration:none;color:#ffd11a;font-size:100px' aria-hidden='true'></span></a></p> <p id='fname' style='text-decoration:none;font-size:22.5px;padding-left:2%'>"+data.folders[i]+"</p><p><button id='rem/"+data.folders[i]+"' onclick='remove(this.id)' class='btn btn-danger btn-md'><span class='glyphicon glyphicon-remove' style='text-decoration:none;color:white' aria-hidden='true'></span>&nbsp;Remove</button></p></div>";
 					//alert(str);	
 				}
 				cover=cover+str+"</div></section>";
@@ -84,7 +89,7 @@
 				var cover="<section class='container'><div class='row'>";
 				var str=""
 				for(var i=0;i<data.folders.length;i++){
-					str=str+"<div class='col-sm-4 col-md-2' style='padding-bottom: 15px; height: 100px'> <p><a href='javascript:void(0)'  id='"+data.folders[i]+"' onclick='browse(this.id)'><span class='glyphicon glyphicon-folder-open' style='text-decoration:none;color:#ffd11a;font-size:100px' aria-hidden='true'></span></a></p> <p id='fname' style='text-decoration:none;width:100px;font-size:22.5px;padding-left:2%'>"+data.folders[i]+"</p><p><button id='rem/"+data.folders[i]+"' onclick='remove(this.id)' class='btn btn-danger btn-md'><span class='glyphicon glyphicon-remove' style='text-decoration:none;color:white' aria-hidden='true'></span>&nbsp;Remove</button></p></div>";
+					str=str+"<div class='col-sm-4 col-md-2' style='padding-bottom: 15px; height: 300px'> <p><a href='javascript:void(0)'  id='"+data.folders[i]+"' onclick='browse(this.id)'><span class='glyphicon glyphicon-folder-open' style='text-decoration:none;color:#ffd11a;font-size:100px' aria-hidden='true'></span></a></p> <p id='fname' style='text-decoration:none;width:100px;font-size:22.5px;padding-left:2%'>"+data.folders[i]+"</p><p><button id='rem/"+data.folders[i]+"' onclick='remove(this.id)' class='btn btn-danger btn-md'><span class='glyphicon glyphicon-remove' style='text-decoration:none;color:white' aria-hidden='true'></span>&nbsp;Remove</button></p></div>";
 					//alert(str);	
 				}
 				cover=cover+str+"</div></section>";
@@ -175,7 +180,7 @@
 			var cover="<section class='container'><div class='row'>";
 			var str=""
 			for(var i=0;i<data.folders.length;i++){
-				str=str+"<div class='col-sm-4 col-md-2' style='padding-bottom: 15px; height: 100px'> <p><a href='#' id='"+data.folders[i]+"' onclick='browse(this.id)'><span class='glyphicon glyphicon-folder-open' style='text-decoration:none;color:#ffd11a;font-size:100px' aria-hidden='true'></span></a></p> <p id='fname' style='text-decoration:none;width:100px;font-size:22.5px;padding-left:2%'>"+data.folders[i]+"</p><p><button id='rem/"+data.folders[i]+"' onclick='remove(this.id)' class='btn btn-danger btn-md'><span class='glyphicon glyphicon-remove' style='text-decoration:none;color:white' aria-hidden='true'></span>&nbsp;Remove</button></p></div>";
+				str=str+"<div class='col-sm-4 col-md-2' style='padding-bottom: 15px; height: 300px'> <p><a href='#' id='"+data.folders[i]+"' onclick='browse(this.id)'><span class='glyphicon glyphicon-folder-open' style='text-decoration:none;color:#ffd11a;font-size:100px' aria-hidden='true'></span></a></p> <p id='fname' style='text-decoration:none;width:100px;font-size:22.5px;padding-left:2%'>"+data.folders[i]+"</p><p><button id='rem/"+data.folders[i]+"' onclick='remove(this.id)' class='btn btn-danger btn-md'><span class='glyphicon glyphicon-remove' style='text-decoration:none;color:white' aria-hidden='true'></span>&nbsp;Remove</button></p></div>";
 				//alert(str);	
 			}
 			cover=cover+str+"</div></section>";
@@ -207,7 +212,7 @@
 			var cover="<section class='container'><div class='row'>";
 			var str=""
 			for(var i=0;i<data.folders.length;i++){
-				str=str+"<div class='col-sm-4 col-md-2' style='padding-bottom: 15px; height: 100px'> <p><a href='#'  id='"+data.folders[i]+"' onclick='browse(this.id)'><span class='glyphicon glyphicon-folder-open' style='text-decoration:none;color:#ffd11a;font-size:100px' aria-hidden='true'></span></a></p> <p id='fname' style='text-decoration:none;width:100px;font-size:22.5px;padding-left:2%'>"+data.folders[i]+"</p><p><button id='rem/"+data.folders[i]+"' onclick='remove(this.id)' class='btn btn-danger btn-md'><span class='glyphicon glyphicon-remove' style='text-decoration:none;color:white' aria-hidden='true'></span>&nbsp;Remove</button></p></div>";
+				str=str+"<div class='col-sm-4 col-md-2' style='padding-bottom: 15px; height: 300px'> <p><a href='#'  id='"+data.folders[i]+"' onclick='browse(this.id)'><span class='glyphicon glyphicon-folder-open' style='text-decoration:none;color:#ffd11a;font-size:100px' aria-hidden='true'></span></a></p> <p id='fname' style='text-decoration:none;width:100px;font-size:22.5px;padding-left:2%'>"+data.folders[i]+"</p><p><button id='rem/"+data.folders[i]+"' onclick='remove(this.id)' class='btn btn-danger btn-md'><span class='glyphicon glyphicon-remove' style='text-decoration:none;color:white' aria-hidden='true'></span>&nbsp;Remove</button></p></div>";
 				//alert(str);	
 			}
 			cover=cover+str+"</div></section>";
@@ -262,6 +267,9 @@ nav li {
 .newfolder li:last-child{
 	padding-left:2%;
 }
+.content-wrapper .row{
+	height:700px;
+}
 </style>
 </head>
 <body>
@@ -271,11 +279,16 @@ nav li {
 				id="logo" class="logo" src="resources/images/img1.png" />
 			<div id="page_title">Mail Storage Administration</div>
 			<ul>
-				<li id="${ses.username}"
-					style="display: inline-block; list-style: none"><h4>
-						<span class="glyphicon glyphicon-user" style="color: white"
-							aria-hidden="true"></span>&nbsp;&nbsp; ${ses.username}!
-					</h4></li>
+				<li id="${ses.username}" style="display: inline-block; list-style: none">
+					<div class="dropdown">
+								<h4 class="dropdown-toggle"   data-toggle="dropdown">
+									<span class="glyphicon glyphicon-user" style="color: white" aria-hidden="false"></span>&nbsp;&nbsp; ${ses.username}!
+								</h4>
+							    <ul class="dropdown-menu" style="width:5%">
+							      <li><a href="logout">Logout</a></li>
+							    </ul>
+					</div>
+				</li>
 				<li id="${ses.role}"
 					style="display: inline-block; list-style: none; margin-left: 60%"><h4><a href="homepage" id="hm" class="glyphicon glyphicon-home" style="text-decoration:none;color: white"
 							aria-hidden="true"></a>&nbsp;&nbsp;${ses.role}</h4></li>
@@ -295,7 +308,7 @@ nav li {
 				<div class="row">
 					<c:forEach items="${folders}" var="folder">
 						<div class="col-sm-4 col-md-2"
-							style="padding-bottom: 15px; height: 100px">
+							style="padding-bottom: 15px; height: 300px">
 							<p><a href="javascript:void(0)" id="${folder}" onclick="browse(this.id)"><span class="glyphicon glyphicon-folder-open" style="text-decoration:none;color:#ffd11a;font-size:100px"
 								aria-hidden="true"></span>
 								</a></p>

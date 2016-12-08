@@ -319,4 +319,62 @@ public class ClientService {
 		}
 		return false;
 	}
+	public void deleteClient(String cname) throws IOException{
+		try {
+			JSch jsch = new JSch();
+			jsch.addIdentity(privateKey);
+			Session session = jsch.getSession(user, host, port);
+			session.setPassword(password);
+			java.util.Properties config = new java.util.Properties();
+			config.put("StrictHostKeyChecking", "no");
+			session.setConfig(config);
+			Logger logger=LoggerFactory.getLogger(ClientService.class);
+			logger.info("Establishing Connection...");
+			session.connect();
+			logger.info("Connection established.");
+			logger.info("Creating SFTP Channel.");
+			ChannelSftp sftpChannel = (ChannelSftp) session.openChannel("sftp");
+			
+			sftpChannel.connect();
+			
+			logger.info("SFTP Channel created.");
+			Session session1 = jsch.getSession(user, host, port);
+			session1.setPassword(password);
+			java.util.Properties config1 = new java.util.Properties();
+			config1.put("StrictHostKeyChecking", "no");
+			session1.setConfig(config1);
+			session1.connect();
+			ChannelSftp sftpChannel1 = (ChannelSftp) session1.openChannel("sftp");
+			
+			sftpChannel1.connect();
+			sftpChannel.cd("MSA");
+			
+			sftpChannel1.cd("MSA/metadata");
+			InputStream out= null;
+	        out= sftpChannel1.get("client.json");
+	        String theString = IOUtils.toString(out,"UTF-8");
+	        ObjectMapper mapper=new ObjectMapper();
+	        ClientRepository cr=mapper.readValue(theString, ClientRepository.class);
+	        List<Client> list=cr.getClient();
+	        for(int i=0;i<list.size();i++){
+	        	if(cname.equals(list.get(i).getName())){
+	        		System.out.println("Removing"+cname);
+	        		list.remove(i);
+	        		cr.setTokencount(cr.getTokencount()-1);
+	        	}
+	        }
+	        theString=mapper.writerWithDefaultPrettyPrinter().writeValueAsString(cr);
+	        OutputStream in = sftpChannel1.put("client.json");
+			BufferedWriter bw = new BufferedWriter(new PrintWriter(in));
+			bw.write(theString);
+			bw.close();
+			sftpChannel.disconnect();
+			session.disconnect();
+			sftpChannel1.disconnect();
+			session1.disconnect();
+		} 
+		catch (JSchException | SftpException e) {
+			e.printStackTrace();
+		}
+	}
 }

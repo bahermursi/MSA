@@ -23,11 +23,30 @@
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <!--script type="text/javascript" src="js/jquery-3.1.1.js"></script-->
-<link rel="javascript" type="text/javascript"
-	href="resources/js/bootstrap.js" />
+<link rel="javascript" type="text/javascript" href="resources/js/bootstrap.js" />
 <link rel="javascript" type="text/javascript" href="resources/js/npm.js" />
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
 <script type="text/javascript">
 	$(document).ready(function(){
+		var eventhandler=function(e){
+			e.preventDefault();
+		}
+		function valid(cl){
+			//$("#delete").bind("submit",eventhandler);
+			console.log("Inside routine");
+			var r=confirm("Are you sure you want to delete "+cl);
+			if(r==true){
+				return true;
+			}
+			else{
+				//$("#delete").unbind("submit",eventhandler);
+				return false;
+			}
+		}
 		$(".thumbnail").mouseover(function(){
 			var id = $(this).attr('id');
 			//alert(id);
@@ -64,6 +83,18 @@
 		//console.log("#"+id);
 		document.getElementById(id).style.boxShadow = "0px 0px 0px 0px";
 		document.getElementById(id).style.backgroundColor = "#000000";
+	}
+	function validate(cl){
+		//$("#delete").bind("submit",eventhandler);
+		console.log("Inside routine");
+		var r=confirm("Are you sure you want to delete "+cl);
+		if(r==true){
+			return true;
+		}
+		else{
+			//$("#delete").unbind("submit",eventhandler);
+			return false;
+		}
 	}
 </script>
 <style>
@@ -107,11 +138,16 @@ nav li {
 				id="logo" class="logo" src="resources/images/img1.png" />
 			<div id="page_title">Mail Storage Administration</div>
 			<ul>
-				<li id="${ses.username}"
-					style="display: inline-block; list-style: none"><h4>
-						<span class="glyphicon glyphicon-user" style="color: white"
-							aria-hidden="true"></span>&nbsp;&nbsp; ${ses.username}!
-					</h4></li>
+				<li id="${ses.username}" style="display: inline-block; list-style: none">
+						<div class="dropdown">
+								<h4 class="dropdown-toggle"   data-toggle="dropdown">
+									<span class="glyphicon glyphicon-user" style="color: white" aria-hidden="false"></span>&nbsp;&nbsp; ${ses.username}!
+								</h4>
+							    <ul class="dropdown-menu" style="width:5%">
+							      <li><a href="logout">Logout</a></li>
+							    </ul>
+						</div>
+				</li>
 				<li id="${ses.role}"
 					style="display: inline-block; list-style: none; margin-left: 60%"><h4><a href="homepage" class="glyphicon glyphicon-home" style="text-decoration:none;color: white"
 							aria-hidden="true"></a>&nbsp;&nbsp;${ses.role}</h4></li>
@@ -123,6 +159,11 @@ nav li {
 				<li><button role="button" class="btn btn-primary btn-lg"
 						onclick="navigate()">Create New Client</button></li>
 			</ul>
+		</nav>
+		</c:if>
+		<c:if test="${ses.role=='IT_SUPPORT' || ses.role=='EMAIL_SUPPORT'}">
+		<nav>
+			
 		</nav>
 		</c:if>
 		<section class="container">
@@ -193,11 +234,15 @@ nav li {
 								<p>
 									<form id="manage" action="managefolders">
 										<input type="hidden" name="fname" value="${client.name}">
-										<button type="submit" id="mng" class="btn btn-success btn-md"><span class="glyphicon glyphicon-folder-open" style="color: white"
-							aria-hidden="true"></span>&nbsp;&nbsp;Manage</button>
+										<button type="submit" id="mng" class="btn btn-success btn-md"><span class="glyphicon glyphicon-folder-open" style="color: white" aria-hidden="true"></span>&nbsp;&nbsp;Manage</button>
 								   	</form>
 								</p>
-								
+								<p>   	
+									<form id="delete" action="deleteClient" onsubmit="return validate('${client.name}');">
+										<input type="hidden" id="cl" name="cname" value="${client.name}">
+										<button type="submit"  id="delt" class="btn btn-danger btn-md"><span class="glyphicon glyphicon-remove" style="color: white" aria-hidden="true"></span>&nbsp;&nbsp;Delete</button>
+								   	</form>
+								</p>
 							</div>
 						</div>
 					</div>

@@ -25,6 +25,11 @@
 	href="resources/js/bootstrap.js" />
 <link rel="javascript" type="text/javascript" href="resources/js/npm.js" />
 <script type="text/javascript" src="resources/js/msacommon.js"></script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("#fault").hide();
@@ -177,11 +182,16 @@
 			<div id="page_title">Mail Storage Administration</div>
 			<ul>
 
-				<li id="${ses.username}"
-					style="display: inline-block; list-style: none"><h4>
-						<span class="glyphicon glyphicon-user" style="color: white"
-							aria-hidden="true"></span>&nbsp;&nbsp; ${ses.username}!
-					</h4></li>
+				<li id="${ses.username}" style="display: inline-block; list-style: none">
+					<div class="dropdown">
+								<h4 class="dropdown-toggle"   data-toggle="dropdown">
+									<span class="glyphicon glyphicon-user" style="color: white" aria-hidden="false"></span>&nbsp;&nbsp; ${ses.username}!
+								</h4>
+							    <ul class="dropdown-menu" style="width:5%">
+							      <li><a href="logout">Logout</a></li>
+							    </ul>
+					</div>
+			   </li>
 				<li id="${ses.role}"
 					style="display: inline-block; list-style: none; margin-left: 60%"><h4>
 						<a href="homepage" class="glyphicon glyphicon-home" style="text-decoration:none;color: white"

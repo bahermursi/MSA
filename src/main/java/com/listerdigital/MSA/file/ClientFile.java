@@ -7,9 +7,19 @@ import com.listerdigital.MSA.service.ClientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jcraft.jsch.*;
 import java.io.*;
+import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
 import java.sql.*;
+
+import oracle.jdbc.pool.OracleDataSource;
+import java.util.Properties;
+import javax.sql.DataSource;
 
 public class ClientFile {
 	String user = "";
@@ -17,19 +27,40 @@ public class ClientFile {
     String host = "";
     int port=22;
     String theString="";
-    String privateKey = "";
+    String privateKey="";
+    Resource resource;
+    File f;
     List<Client> clientList;
+    Logger logger=LoggerFactory.getLogger(ClientFile.class);
+    Properties props = new Properties();
+	InputStream fis = null;
+	OracleDataSource oracleDS = null;
 	public List<Client> getallClients(){
 		try{
-	    	Class.forName("oracle.jdbc.driver.OracleDriver");
-		    Connection con=DriverManager.getConnection("jdbc:oracle:thin:@10.106.20.63:1521:dexter","training5","training5");
+			Resource dbprop=new ClassPathResource("db.properties");
+			fis=dbprop.getInputStream();
+			props.load(fis);
+			oracleDS = new OracleDataSource();
+			oracleDS.setURL(props.getProperty("ORACLE_DB_URL"));
+			oracleDS.setUser(props.getProperty("ORACLE_DB_USERNAME"));
+			oracleDS.setPassword(props.getProperty("ORACLE_DB_PASSWORD"));
+			Connection con=oracleDS.getConnection();
 		    PreparedStatement ps=con.prepareStatement("Select * from sshcredentials_msa");
 		    ResultSet rs=ps.executeQuery();
 		    while(rs.next()){
 		    	user=rs.getString(1);
 		    	host=rs.getString(2);
 		    	port=Integer.parseInt(rs.getString(3));
-		    	privateKey=rs.getString(4);
+		    	try{
+		    		resource = new ClassPathResource("esl");
+			    	f=resource.getFile();
+			    	logger.info(f.getAbsolutePath());
+			    	privateKey= f.toString();
+		    	}
+		    	catch(Exception e){
+		    		logger.info("Exception occured"+e);
+		    	}
+		    	//privateKey=rs.getString(4);
 		    }
 	    }
 	    catch(Exception e){
@@ -44,21 +75,15 @@ public class ClientFile {
 	        java.util.Properties config = new java.util.Properties(); 
 	        config.put("StrictHostKeyChecking", "no");
 	        session.setConfig(config);
-	        System.out.println("Establishing Connection...");
+	        logger.info("Establishing Connection...");
 	        session.connect();
-	        System.out.println("Connection established.");
-	        System.out.println("Crating SFTP Channel.");
+	        logger.info("Connection established.");
+	        logger.info("Crating SFTP Channel.");
 	        ChannelSftp sftpChannel = (ChannelSftp) session.openChannel("sftp");
 	        //ChannelSftp sftpChannel2 = (ChannelSftp) session.openChannel("sftp");
 	        sftpChannel.connect();
 	        //sftpChannel2.connect();
-	        System.out.println("SFTP Channel created.");
-	        
-	        /*sftpChannel.cd("Souvik/newfolder");
-	        File f=new File(remoteFile);
-	        sftpChannel.put(new FileInputStream(f), f.getName());*/
-	        //sftpChannel.mkdir("MSA");
-	        //sftpChannel.mkdir("MSA/metadata");
+	        logger.info("SFTP Channel created.");
 	        sftpChannel.cd("MSA/metadata");
 			//InputStream obj_InputStream = new ByteArrayInputStream("".getBytes());
 		    //sftpChannel.put(obj_InputStream,remoteFile);
@@ -72,13 +97,13 @@ public class ClientFile {
 	        }
 	        cr=mapper.readValue(theString, ClientRepository.class);
 	        clientList=cr.getClient();
-	        //System.out.println("String succesfully converted:"+theString);
+	        //logger.info("String succesfully converted:"+theString);
 			sftpChannel.disconnect();
 	        session.disconnect();
 	    }
 	    catch(JSchException | SftpException | IOException e)
 		{
-		    System.out.println(e);
+		    e.printStackTrace();;
 		}
 		return clientList;
 	}

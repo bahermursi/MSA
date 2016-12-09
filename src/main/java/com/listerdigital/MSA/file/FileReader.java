@@ -1,10 +1,20 @@
 package com.listerdigital.MSA.file;
 
 import com.jcraft.jsch.*;
+
+import oracle.jdbc.pool.OracleDataSource;
+
 import java.io.*;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
 import java.sql.*;
+import java.util.Properties;
+import oracle.jdbc.pool.OracleDataSource;
+import java.util.Properties;
+import javax.sql.DataSource;
 
 public class FileReader {
 	String user = "";
@@ -13,17 +23,37 @@ public class FileReader {
     int port=22;
     String theString="";
     String privateKey = "";
+    Resource resource;
+    File f;
+    Properties props = new Properties();
+	InputStream fis = null;
+	OracleDataSource oracleDS = null;
     public String getJSONString(String remoteFile){
     try{
-    	Class.forName("oracle.jdbc.driver.OracleDriver");
-	    Connection con=DriverManager.getConnection("jdbc:oracle:thin:@10.106.20.63:1521:dexter","training5","training5");
+    	Resource dbprop=new ClassPathResource("db.properties");
+		fis=dbprop.getInputStream();
+		props.load(fis);
+		oracleDS = new OracleDataSource();
+		oracleDS.setURL(props.getProperty("ORACLE_DB_URL"));
+		oracleDS.setUser(props.getProperty("ORACLE_DB_USERNAME"));
+		oracleDS.setPassword(props.getProperty("ORACLE_DB_PASSWORD"));
+		Connection con=oracleDS.getConnection();
 	    PreparedStatement ps=con.prepareStatement("Select * from sshcredentials_msa");
 	    ResultSet rs=ps.executeQuery();
 	    while(rs.next()){
 	    	user=rs.getString(1);
 	    	host=rs.getString(2);
 	    	port=Integer.parseInt(rs.getString(3));
-	    	privateKey=rs.getString(4);
+	    	try{
+	    		resource = new ClassPathResource("esl");
+		    	f=resource.getFile();
+		    	System.out.println(f.getAbsolutePath());
+		    	privateKey= f.toString();
+	    	}
+	    	catch(Exception e){
+	    		System.out.println("Exception occured"+e);
+	    	}
+	    	//privateKey=rs.getString(4);
 	    }
     }
     catch(Exception e){

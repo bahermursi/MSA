@@ -219,7 +219,7 @@
 												cssClass="field" id="bcc" path="bcc"
 												placeholder="                Enter Client's BCC"
 												onfocus="foc(this.id)" onblur="focout(this.id)" /></li>
-										<li><form:errors path="bcc" cssClass="error" /></li>
+										<li><label></label><form:errors path="bcc" cssClass="error" /></li>
 										<li><label>Allocated Size</label> <form:select
 												type="number" cssClass="field" id="allocated"
 												path="allocated"

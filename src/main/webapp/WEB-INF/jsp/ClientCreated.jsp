@@ -118,7 +118,7 @@
 				</li>
 				<li id="${ses.role}"
 					style="display: inline-block; list-style: none; margin-left: 60%"><h4>
-						<a href="homepage" class="glyphicon glyphicon-king" style="text-decoration:none;color: white"
+						<a href="homepage" class="glyphicon glyphicon-home" style="text-decoration:none;color: white"
 							aria-hidden="true"></a>&nbsp;&nbsp;${ses.role}
 					</h4></li>
 			</ul>

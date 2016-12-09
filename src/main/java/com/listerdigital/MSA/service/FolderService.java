@@ -1,6 +1,7 @@
 package com.listerdigital.MSA.service;
 
 import com.jcraft.jsch.*;
+
 import com.listerdigital.MSA.domain.Folder;
 import com.listerdigital.MSA.repository.*;
 import java.sql.*;
@@ -10,6 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+import oracle.jdbc.pool.OracleDataSource;
+import java.util.Properties;
+import javax.sql.DataSource;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,18 +36,38 @@ public class FolderService {
 	String host = "";
 	int port;
 	String privateKey = "";
-
+    Resource resource;
+    File f;
+    Logger logger=LoggerFactory.getLogger(FolderService.class);
+    Properties props = new Properties();
+	InputStream fis = null;
+	OracleDataSource oracleDS = null;
 	public FolderService() throws IOException {
 		try{
-	    	Class.forName("oracle.jdbc.driver.OracleDriver");
-		    Connection con=DriverManager.getConnection("jdbc:oracle:thin:@10.106.20.63:1521:dexter","training5","training5");
+			Resource dbprop=new ClassPathResource("db.properties");
+			fis=dbprop.getInputStream();
+			props.load(fis);
+			oracleDS = new OracleDataSource();
+			oracleDS.setURL(props.getProperty("ORACLE_DB_URL"));
+			oracleDS.setUser(props.getProperty("ORACLE_DB_USERNAME"));
+			oracleDS.setPassword(props.getProperty("ORACLE_DB_PASSWORD"));
+			Connection con=oracleDS.getConnection();
 		    PreparedStatement ps=con.prepareStatement("Select * from sshcredentials_msa");
 		    ResultSet rs=ps.executeQuery();
 		    while(rs.next()){
 		    	user=rs.getString(1);
 		    	host=rs.getString(2);
 		    	port=Integer.parseInt(rs.getString(3));
-		    	privateKey=rs.getString(4);
+		    	try{
+		    		resource = new ClassPathResource("esl");
+			    	f=resource.getFile();
+			    	logger.info(f.getAbsolutePath());
+			    	privateKey= f.toString();
+		    	}
+		    	catch(Exception e){
+		    		logger.info("Exception occured"+e);
+		    	}
+		    	//privateKey=rs.getString(4);
 		    }
 	    }
 	    catch(Exception e){
@@ -52,15 +81,15 @@ public class FolderService {
 			java.util.Properties config = new java.util.Properties();
 			config.put("StrictHostKeyChecking", "no");
 			session.setConfig(config);
-			System.out.println("Establishing Connection...");
+			logger.info("Establishing Connection...");
 			session.connect();
-			System.out.println("Connection established.");
-			System.out.println("Creating SFTP Channel.");
+			logger.info("Connection established.");
+			logger.info("Creating SFTP Channel.");
 			ChannelSftp sftpChannel = (ChannelSftp) session.openChannel("sftp");
 
 			sftpChannel.connect();
 
-			System.out.println("SFTP Channel created.");
+			logger.info("SFTP Channel created.");
 			Session session1 = jsch.getSession(user, host, port);
 			session1.setPassword(password);
 			java.util.Properties config1 = new java.util.Properties();
@@ -74,7 +103,7 @@ public class FolderService {
 
 			sftpChannel1.cd("MSA/metadata");
 			createData(sftpChannel, sftpChannel1);
-			//System.out.println(sftpChannel.pwd()+","+sftpChannel1.pwd());
+			//logger.info(sftpChannel.pwd()+","+sftpChannel1.pwd());
 			//sftpChannel1.cd("Flipkart");
 			//sftpChannel1.rmdir("Data");
 			//sftpChannel1.cd("..");
@@ -82,11 +111,11 @@ public class FolderService {
 			String path = "MSA";
 			getPath(sftpChannel, path);
 			for (int i = 0; i < pathArray.size(); i++) {
-				//System.out.println(pathArray.get(i));
-				// System.out.println(pathArray.get(i).split("/").length);
+				//logger.info(pathArray.get(i));
+				// logger.info(pathArray.get(i).split("/").length);
 				client = pathArray.get(i).split("/");
 				for (int j = 0; j < client.length; j++) {
-					//System.out.println(client[j]);
+					//logger.info(client[j]);
 				}
 				createFolderJson(sftpChannel1, pathArray.get(i));
 			}
@@ -103,11 +132,11 @@ public class FolderService {
 			sftpChannel1.disconnect();
 			session1.disconnect();
 		} catch (JSchException | SftpException e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 
-	public static void createData(ChannelSftp sftpChannel, ChannelSftp sftpChannel1)
+	public void createData(ChannelSftp sftpChannel, ChannelSftp sftpChannel1)
 			throws SftpException, JSchException {
 		Vector<ChannelSftp.LsEntry> list = sftpChannel.ls("*"); // List source
 																// directory
@@ -119,9 +148,9 @@ public class FolderService {
 			ChannelSftp s1 = sftpChannel1;
 			if (oListItem.getAttrs().isDir()) {
 
-				// System.out.println(oListItem.getFilename());
+				// logger.info(oListItem.getFilename());
 				if (!oListItem.getFilename().equals("metadata")) {
-					//System.out.println(oListItem.getFilename());
+					//logger.info(oListItem.getFilename());
 					try {
 						s1.cd(oListItem.getFilename());
 					} catch (Exception e) {
@@ -139,7 +168,7 @@ public class FolderService {
 
 	}
 
-	public static void deleteData(ChannelSftp sftpChannel, ChannelSftp sftpChannel1) throws SftpException, JSchException {
+	public  void deleteData(ChannelSftp sftpChannel, ChannelSftp sftpChannel1) throws SftpException, JSchException {
 		Vector<ChannelSftp.LsEntry> list = sftpChannel1.ls("*"); 
 		//Vector<ChannelSftp.LsEntry> list1 = sftpChannel.ls("*");// List source
 		// directory
@@ -151,12 +180,12 @@ public class FolderService {
 			ChannelSftp s1 = sftpChannel1;
 			if (oListItem.getAttrs().isDir()) {
 
-				 //System.out.println(oListItem.getFilename());
+				 //logger.info(oListItem.getFilename());
 				if (!oListItem.getFilename().equals("metadata")) {
 					
 					try {
-						//System.out.println("Inside"+s1.pwd()+"/"+oListItem.getFilename());
-						//System.out.println("Inside"+s.pwd()+"/"+oListItem.getFilename());
+						//logger.info("Inside"+s1.pwd()+"/"+oListItem.getFilename());
+						//logger.info("Inside"+s.pwd()+"/"+oListItem.getFilename());
 						s.cd(oListItem.getFilename());
 						s1.cd(oListItem.getFilename());
 						deleteData(s, s1);
@@ -164,7 +193,7 @@ public class FolderService {
 						s.cd("..");
 					} 
 					catch (Exception e) {
-						System.out.println("Inside"+s1.pwd()+"..."+oListItem.getFilename());
+						//logger.info("Inside"+s1.pwd()+"..."+oListItem.getFilename());
 						s1.cd(oListItem.getFilename());
 						deleteSubData(s1);
 						s1.cd("..");
@@ -179,7 +208,7 @@ public class FolderService {
 		}
 	}
 	
-	public static void deleteSubData(ChannelSftp sftpChannel) throws SftpException{
+	public  void deleteSubData(ChannelSftp sftpChannel) throws SftpException{
 		Vector<ChannelSftp.LsEntry> list = sftpChannel.ls("*");
 		for (ChannelSftp.LsEntry oListItem : list){
 			if(!oListItem.getAttrs().isDir()){
@@ -203,7 +232,7 @@ public class FolderService {
 		
 	}
 
-	public static void getPath(ChannelSftp sftpChannel, String path) throws SftpException, JSchException {
+	public void getPath(ChannelSftp sftpChannel, String path) throws SftpException, JSchException {
 		Vector<ChannelSftp.LsEntry> list = sftpChannel.ls("*"); // List source
 																// directory
 																// structure.
@@ -225,7 +254,7 @@ public class FolderService {
 														// file/folder names.
 			if (oListItem.getAttrs().isDir()) {
 
-				// System.out.println(oListItem.getFilename());
+				// logger.info(oListItem.getFilename());
 				if (!oListItem.getFilename().equals("metadata")) {
 					sftpChannel.cd(oListItem.getFilename());
 					getPath(sftpChannel, path + "/" + oListItem.getFilename());
@@ -236,14 +265,14 @@ public class FolderService {
 
 	}
 
-	public static void createFolderJson(ChannelSftp sftpChannel, String path) throws SftpException, IOException {
+	public  void createFolderJson(ChannelSftp sftpChannel, String path) throws SftpException, IOException {
 		Vector<ChannelSftp.LsEntry> list = sftpChannel.ls("*");
 		for (ChannelSftp.LsEntry oListItem : list) { // Iterate objects in the
 														// list to get
 														// file/folder names.
 			if (oListItem.getAttrs().isDir()) {
 				int flag = 0;
-				// System.out.println(client[2]);
+				// logger.info(client[2]);
 				if (oListItem.getFilename().equals(client[1])) {
 					sftpChannel.cd(client[1]);
 					// attrs =
@@ -282,7 +311,7 @@ public class FolderService {
 		}
 	}
 
-	public static String getFolderJson(Folder f, String theString)
+	public  String getFolderJson(Folder f, String theString)
 			throws JsonParseException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -323,14 +352,14 @@ public class FolderService {
 	}
 	
 	
-	public static void removeFolderJson(ChannelSftp sftpChannel, Folder f) throws SftpException, IOException {
+	public  void removeFolderJson(ChannelSftp sftpChannel, Folder f) throws SftpException, IOException {
 		Vector<ChannelSftp.LsEntry> list = sftpChannel.ls("*");
 		for (ChannelSftp.LsEntry oListItem : list) { // Iterate objects in the
 														// list to get
 														// file/folder names.
 			if (oListItem.getAttrs().isDir()) {
 				int flag = 0;
-				// System.out.println(client[2]);
+				// logger.info(client[2]);
 				if (oListItem.getFilename().equals(client[1])) {
 					sftpChannel.cd(client[1]);
 					// attrs =
@@ -367,7 +396,7 @@ public class FolderService {
 	}
 	
 	
-	public static String deleteFolderJson(Folder f, String theString) throws JsonParseException, JsonMappingException, IOException{
+	public  String deleteFolderJson(Folder f, String theString) throws JsonParseException, JsonMappingException, IOException{
 		ObjectMapper mapper = new ObjectMapper();
 
 		if (!theString.equals("")) {
@@ -394,15 +423,30 @@ public class FolderService {
 	}
 	public void createFolder(String path,String fname){
 		try{
-	    	Class.forName("oracle.jdbc.driver.OracleDriver");
-		    Connection con=DriverManager.getConnection("jdbc:oracle:thin:@10.106.20.63:1521:dexter","training5","training5");
+			Resource dbprop=new ClassPathResource("db.properties");
+			fis=dbprop.getInputStream();
+			props.load(fis);
+			oracleDS = new OracleDataSource();
+			oracleDS.setURL(props.getProperty("ORACLE_DB_URL"));
+			oracleDS.setUser(props.getProperty("ORACLE_DB_USERNAME"));
+			oracleDS.setPassword(props.getProperty("ORACLE_DB_PASSWORD"));
+			Connection con=oracleDS.getConnection();
 		    PreparedStatement ps=con.prepareStatement("Select * from sshcredentials_msa");
 		    ResultSet rs=ps.executeQuery();
 		    while(rs.next()){
 		    	user=rs.getString(1);
 		    	host=rs.getString(2);
 		    	port=Integer.parseInt(rs.getString(3));
-		    	privateKey=rs.getString(4);
+		    	try{
+		    		resource = new ClassPathResource("esl");
+			    	f=resource.getFile();
+			    	logger.info(f.getAbsolutePath());
+			    	privateKey= f.toString();
+		    	}
+		    	catch(Exception e){
+		    		logger.info("Exception occured"+e);
+		    	}
+		    	//privateKey=rs.getString(4);
 		    }
 	    }
 	    catch(Exception e){
@@ -416,15 +460,15 @@ public class FolderService {
 			java.util.Properties config = new java.util.Properties();
 			config.put("StrictHostKeyChecking", "no");
 			session.setConfig(config);
-			System.out.println("Establishing Connection...");
+			logger.info("Establishing Connection...");
 			session.connect();
-			System.out.println("Connection established.");
-			System.out.println("Crating SFTP Channel.");
+			logger.info("Connection established.");
+			logger.info("Crating SFTP Channel.");
 			ChannelSftp sftpChannel = (ChannelSftp) session.openChannel("sftp");
 
 			sftpChannel.connect();
 
-			System.out.println("SFTP Channel created.");
+			logger.info("SFTP Channel created.");
 			Session session1 = jsch.getSession(user, host, port);
 			session1.setPassword(password);
 			java.util.Properties config1 = new java.util.Properties();
@@ -448,20 +492,35 @@ public class FolderService {
 			sftpChannel1.disconnect();
 			session1.disconnect();
 		} catch (JSchException | SftpException e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 	public void removeFolder(String path,String name) throws IOException{
 		try{
-	    	Class.forName("oracle.jdbc.driver.OracleDriver");
-		    Connection con=DriverManager.getConnection("jdbc:oracle:thin:@10.106.20.63:1521:dexter","training5","training5");
+			Resource dbprop=new ClassPathResource("db.properties");
+			fis=dbprop.getInputStream();
+			props.load(fis);
+			oracleDS = new OracleDataSource();
+			oracleDS.setURL(props.getProperty("ORACLE_DB_URL"));
+			oracleDS.setUser(props.getProperty("ORACLE_DB_USERNAME"));
+			oracleDS.setPassword(props.getProperty("ORACLE_DB_PASSWORD"));
+			Connection con=oracleDS.getConnection();
 		    PreparedStatement ps=con.prepareStatement("Select * from sshcredentials_msa");
 		    ResultSet rs=ps.executeQuery();
 		    while(rs.next()){
 		    	user=rs.getString(1);
 		    	host=rs.getString(2);
 		    	port=Integer.parseInt(rs.getString(3));
-		    	privateKey=rs.getString(4);
+		    	try{
+		    		resource = new ClassPathResource("esl");
+			    	f=resource.getFile();
+			    	logger.info(f.getAbsolutePath());
+			    	privateKey= f.toString();
+		    	}
+		    	catch(Exception e){
+		    		logger.info("Exception occured"+e);
+		    	}
+		    	//privateKey=rs.getString(4);
 		    }
 	    }
 	    catch(Exception e){
@@ -475,15 +534,15 @@ public class FolderService {
 			java.util.Properties config = new java.util.Properties();
 			config.put("StrictHostKeyChecking", "no");
 			session.setConfig(config);
-			System.out.println("Establishing Connection...");
+			logger.info("Establishing Connection...");
 			session.connect();
-			System.out.println("Connection established.");
-			System.out.println("Crating SFTP Channel.");
+			logger.info("Connection established.");
+			logger.info("Crating SFTP Channel.");
 			ChannelSftp sftpChannel = (ChannelSftp) session.openChannel("sftp");
 
 			sftpChannel.connect();
 
-			System.out.println("SFTP Channel created.");
+			logger.info("SFTP Channel created.");
 			Session session1 = jsch.getSession(user, host, port);
 			session1.setPassword(password);
 			java.util.Properties config1 = new java.util.Properties();
@@ -507,7 +566,7 @@ public class FolderService {
 			session1.disconnect();
 		}
 		catch (JSchException | SftpException e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 	public void remove(ChannelSftp sftpChannel,String path,String name) throws SftpException{

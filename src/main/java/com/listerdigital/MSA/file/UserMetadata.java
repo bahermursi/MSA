@@ -10,7 +10,19 @@ import com.listerdigital.MSA.domain.*;
 import com.listerdigital.MSA.repository.*;
 import com.listerdigital.MSA.service.UserService;
 
+import oracle.jdbc.pool.OracleDataSource;
+import java.util.Properties;
+import javax.sql.DataSource;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.*;
@@ -19,14 +31,46 @@ public class UserMetadata {
 	public boolean getUser(User u) throws JsonParseException, JsonMappingException, IOException, CloneNotSupportedException{
 		FileReader fr=new FileReader();
 		ObjectMapper mapper = new ObjectMapper();
+		String username;
+		String password;
+		String role;
+		Properties props = new Properties();
+		InputStream fis = null;
+		OracleDataSource oracleDS = null;
 		
-		List<User> list;
+		//List<User> list;
 		
-		UserRepository usr=mapper.readValue(fr.getJSONString("user.json"), UserRepository.class);
+		//UserRepository usr=mapper.readValue(fr.getJSONString("user.json"), UserRepository.class);
 		
 		
-		list=usr.getUsers();
+		//list=usr.getUsers();
 		
+		try{
+			Resource dbprop=new ClassPathResource("db.properties");
+			fis=dbprop.getInputStream();
+			props.load(fis);
+			oracleDS = new OracleDataSource();
+			oracleDS.setURL(props.getProperty("ORACLE_DB_URL"));
+			oracleDS.setUser(props.getProperty("ORACLE_DB_USERNAME"));
+			oracleDS.setPassword(props.getProperty("ORACLE_DB_PASSWORD"));
+			Connection con=oracleDS.getConnection();
+		    PreparedStatement ps=con.prepareStatement("Select * from user_msa");
+		    ResultSet rs=ps.executeQuery();
+		    while(rs.next()){
+		    	username=rs.getString("username");
+		    	password=rs.getString("password");
+		    	role=rs.getString("role");
+		    	if(u.getUsername().equals(username) && u.getPassword().equals(password)){
+					u.setRole(role);
+			        return true;
+				}
+		    }
+	    }
+	    catch(Exception e){
+	    	e.printStackTrace();
+	    }
+		
+		/*
 		
 		for(int i=0;i<usr.getTokencount();i++){
 			if(u.getUsername().equals(list.get(i).getUsername()) && u.getPassword().equals(list.get(i).getPassword())){
@@ -36,22 +80,7 @@ public class UserMetadata {
 			}
 		}
 		
-		
-		
-		
-		//usr.getUsers().add(list.get(2));
-		
-		//System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(usr));
-		
-		//Overwrite the json String
-		//fr.putJSONString("user.json",mapper.writerWithDefaultPrettyPrinter().writeValueAsString(usr));
-		
-		
-		
-		
-		                               
-		
-		//System.out.println(usr.getTokencount());
+		*/
         return false;
 	}
 }

@@ -157,7 +157,7 @@ nav li {
 		<nav>
 			<ul>
 				<li><button role="button" class="btn btn-primary btn-lg"
-						onclick="navigate()">Create New Client</button></li>
+						onclick="navigate()"><span class="glyphicon glyphicon-plus" style="color: white" aria-hidden="false"></span>&nbsp;Create New Client</button></li>
 			</ul>
 		</nav>
 		</c:if>

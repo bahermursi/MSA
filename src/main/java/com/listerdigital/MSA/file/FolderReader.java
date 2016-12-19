@@ -35,8 +35,8 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
+import com.listerdigital.MSA.dao.ClientDao;
 import com.listerdigital.MSA.domain.*;
-import com.listerdigital.MSA.service.ClientService;
 
 public class FolderReader {
 	String user = "";

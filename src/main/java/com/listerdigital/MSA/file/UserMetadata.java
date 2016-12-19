@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.listerdigital.MSA.dao.UserDao;
 import com.listerdigital.MSA.domain.*;
 import com.listerdigital.MSA.repository.*;
-import com.listerdigital.MSA.service.UserService;
 
 import oracle.jdbc.pool.OracleDataSource;
 import java.util.Properties;

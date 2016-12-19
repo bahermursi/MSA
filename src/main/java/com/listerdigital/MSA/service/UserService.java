@@ -1,10 +1,10 @@
 package com.listerdigital.MSA.service;
 
-import com.listerdigital.MSA.domain.*;
+import com.listerdigital.MSA.domain.User;
 
-public class UserService {
-	public void registerUser(User u,User v) throws CloneNotSupportedException{
-		//System.out.println(v.getRole()+","+u.getRole());
-		u.setRole(v.getRole());
+public class Userservice {
+	User usr;
+	public Userservice(User u){
+		usr=u;
 	}
 }

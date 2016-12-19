@@ -11,8 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.listerdigital.MSA.dao.FolderDao;
 import com.listerdigital.MSA.domain.User;
-import com.listerdigital.MSA.service.FolderService;
 
 @Controller
 public class LogoutController {

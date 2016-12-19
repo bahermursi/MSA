@@ -2,7 +2,6 @@ package com.listerdigital.MSA.controller;
 
 import java.io.IOException;
 import java.util.Map;
-import com.listerdigital.MSA.service.*;
 
 import javax.servlet.http.HttpServlet;
 import javax.validation.Valid;
@@ -22,7 +21,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.listerdigital.MSA.dao.*;
 import com.listerdigital.MSA.domain.*;
+import com.listerdigital.MSA.service.Clientservice;
+import com.listerdigital.MSA.service.Folderservice;
 
 @Controller
 @SessionAttributes("ses")
@@ -48,10 +50,10 @@ public class ClientController {
 		if (result.hasErrors()){  	
             return "ClientDetails";
         }
-		FolderService fs=new FolderService();
+		Folderservice fs=new Folderservice();
 		fs.createFolder("MSA", client.getName());
-		FolderService updatefolder=new FolderService();
-		ClientService cs=new ClientService(client);
+		Folderservice updatefolder=new Folderservice();
+		Clientservice cs=new Clientservice(client);
 		model.put("client", client);
 		return "ClientCreated";
 	}
@@ -59,7 +61,7 @@ public class ClientController {
 	@RequestMapping(value = "/verifyClient",produces=MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public String verify(@RequestParam String name,Model model) throws IOException{
-		ClientService cs=new ClientService();
+		Clientservice cs=new Clientservice();
 		boolean result=cs.clientExists(name);
 		model.addAttribute("result",result);
 		ObjectMapper mapper=new ObjectMapper();
@@ -84,12 +86,12 @@ public class ClientController {
 	
 	@RequestMapping(value = "/deleteClient")
 	public String deleteclient(@RequestParam String cname,Model model) throws IOException{
-		ClientService cs=new ClientService();
+		Clientservice cs=new Clientservice();
 		System.out.println(cname);
 		cs.deleteClient(cname);
-		FolderService fs=new FolderService();
+		Folderservice fs=new Folderservice();
 		fs.removeFolder("MSA", cname);
-		fs=new FolderService();
+		fs=new Folderservice();
 		return "redirect:/homepage";
 	}
 }

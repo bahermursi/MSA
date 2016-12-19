@@ -1,9 +1,9 @@
 package com.listerdigital.MSA.file;
 import java.util.List;
 
+import com.listerdigital.MSA.dao.ClientDao;
 import com.listerdigital.MSA.domain.*;
 import com.listerdigital.MSA.repository.*;
-import com.listerdigital.MSA.service.ClientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jcraft.jsch.*;
 import java.io.*;
@@ -93,7 +93,7 @@ public class ClientFile {
 	        ObjectMapper mapper=new ObjectMapper();
 	        ClientRepository cr=mapper.readValue(theString, ClientRepository.class);
 	        for(int i=0;i<cr.getTokencount();i++){
-	        	new ClientService(cr.getClient().get(i));
+	        	new ClientDao(cr.getClient().get(i));
 	        }
 	        cr=mapper.readValue(theString, ClientRepository.class);
 	        clientList=cr.getClient();

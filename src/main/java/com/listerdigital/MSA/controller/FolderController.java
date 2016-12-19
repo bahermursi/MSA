@@ -2,7 +2,6 @@ package com.listerdigital.MSA.controller;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import com.listerdigital.MSA.service.*;
 
 import javax.servlet.http.HttpServlet;
 import javax.validation.Valid;
@@ -23,8 +22,10 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.listerdigital.MSA.dao.*;
 import com.listerdigital.MSA.domain.*;
 import com.listerdigital.MSA.file.FolderReader;
+import com.listerdigital.MSA.service.Folderservice;
 
 @Controller
 public class FolderController {
@@ -74,10 +75,10 @@ public class FolderController {
 	@RequestMapping(value="/createfolder",produces=MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public String create(@RequestParam String currentdir,@RequestParam String folder,Map<String,Object> model) throws IOException{
-		FolderService fs=new FolderService();
+		Folderservice fs=new Folderservice();
 		System.out.println(currentdir+"/"+folder);
 		fs.createFolder(currentdir, folder);
-		fs=new FolderService();
+		fs=new Folderservice();
 		model.put("result", true);
 		ObjectMapper mapper=new ObjectMapper();
 		String jsonString=mapper.writerWithDefaultPrettyPrinter().writeValueAsString(model);
@@ -87,10 +88,10 @@ public class FolderController {
 	@RequestMapping(value="/deletefolder",produces=MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public String delete(@RequestParam String currentdir,@RequestParam String folder,Map<String,Object> model) throws IOException{
-		FolderService fs=new FolderService();
+		Folderservice fs=new Folderservice();
 		System.out.println(currentdir+"/"+folder);
 		fs.removeFolder(currentdir, folder);
-		fs=new FolderService();
+		fs=new Folderservice();
 		model.put("result", true);
 		ObjectMapper mapper=new ObjectMapper();
 		String jsonString=mapper.writerWithDefaultPrettyPrinter().writeValueAsString(model);

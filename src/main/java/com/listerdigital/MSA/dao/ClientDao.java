@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.annotation.*;
 
+@SuppressWarnings("unused")
 public class ClientDao {
 	public int mailcount;
 	// sftpChannel;
@@ -164,6 +165,7 @@ public class ClientDao {
 		setJson(sftpChannel, sftpChannel1, cl, cl.getName());
 	}
 
+	@SuppressWarnings("unchecked")
 	public int getMails(ChannelSftp sftpChannel, String fname) throws SftpException {
 		Vector<ChannelSftp.LsEntry> list = sftpChannel.ls("*");
 		for (ChannelSftp.LsEntry oListItem : list) {
@@ -201,6 +203,7 @@ public class ClientDao {
 		return mailcount;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void setJson(ChannelSftp sftpChannel, ChannelSftp sftpChannel1, Client cl, String fname)
 			throws SftpException, IOException {
 		Vector<ChannelSftp.LsEntry> list = sftpChannel.ls("*");

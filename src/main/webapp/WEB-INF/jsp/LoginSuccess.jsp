@@ -185,8 +185,7 @@ nav li {
 								<p>Total Mails: ${client.total_mails}</p>
 								<p>
 									Space Occupied:
-									<fmt:parseNumber var="per" type="number"
-										value="${client.percentageConsumed}" />
+									<fmt:parseNumber var="per" type="number" value="${client.percentageConsumed}" />
 									<c:if test="${per<1}">
 										<div class="progress">
 											<div class="progress-bar"
@@ -237,7 +236,7 @@ nav li {
 										<button type="submit" id="mng" class="btn btn-success btn-md"><span class="glyphicon glyphicon-folder-open" style="color: white" aria-hidden="true"></span>&nbsp;&nbsp;Manage</button>
 								   	</form>
 								</p>
-								<p>   	
+							    <p>   	
 									<form id="delete" action="deleteClient" onsubmit="return validate('${client.name}');">
 										<input type="hidden" id="cl" name="cname" value="${client.name}">
 										<button type="submit"  id="delt" class="btn btn-danger btn-md"><span class="glyphicon glyphicon-remove" style="color: white" aria-hidden="true"></span>&nbsp;&nbsp;Delete</button>

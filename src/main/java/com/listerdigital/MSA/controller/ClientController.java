@@ -26,6 +26,7 @@ import com.listerdigital.MSA.domain.*;
 import com.listerdigital.MSA.service.Clientservice;
 import com.listerdigital.MSA.service.Folderservice;
 
+@SuppressWarnings("unused")
 @Controller
 @SessionAttributes("ses")
 public class ClientController {

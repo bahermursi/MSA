@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.annotation.*;
 
+@SuppressWarnings("unused")
 public class FolderDao {
 	static List<String> pathArray = new ArrayList<String>();
 	static String client[];
@@ -136,6 +137,7 @@ public class FolderDao {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void createData(ChannelSftp sftpChannel, ChannelSftp sftpChannel1)
 			throws SftpException, JSchException {
 		Vector<ChannelSftp.LsEntry> list = sftpChannel.ls("*"); // List source
@@ -168,6 +170,7 @@ public class FolderDao {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public  void deleteData(ChannelSftp sftpChannel, ChannelSftp sftpChannel1) throws SftpException, JSchException {
 		Vector<ChannelSftp.LsEntry> list = sftpChannel1.ls("*"); 
 		//Vector<ChannelSftp.LsEntry> list1 = sftpChannel.ls("*");// List source
@@ -208,6 +211,7 @@ public class FolderDao {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public  void deleteSubData(ChannelSftp sftpChannel) throws SftpException{
 		Vector<ChannelSftp.LsEntry> list = sftpChannel.ls("*");
 		for (ChannelSftp.LsEntry oListItem : list){
@@ -232,6 +236,7 @@ public class FolderDao {
 		
 	}
 
+	@SuppressWarnings("unchecked")
 	public void getPath(ChannelSftp sftpChannel, String path) throws SftpException, JSchException {
 		Vector<ChannelSftp.LsEntry> list = sftpChannel.ls("*"); // List source
 																// directory
@@ -265,6 +270,7 @@ public class FolderDao {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public  void createFolderJson(ChannelSftp sftpChannel, String path) throws SftpException, IOException {
 		Vector<ChannelSftp.LsEntry> list = sftpChannel.ls("*");
 		for (ChannelSftp.LsEntry oListItem : list) { // Iterate objects in the
@@ -352,6 +358,7 @@ public class FolderDao {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public  void removeFolderJson(ChannelSftp sftpChannel, Folder f) throws SftpException, IOException {
 		Vector<ChannelSftp.LsEntry> list = sftpChannel.ls("*");
 		for (ChannelSftp.LsEntry oListItem : list) { // Iterate objects in the
@@ -569,6 +576,7 @@ public class FolderDao {
 			e.printStackTrace();
 		}
 	}
+	@SuppressWarnings("unchecked")
 	public void remove(ChannelSftp sftpChannel,String path,String name) throws SftpException{
 		try{
 			sftpChannel.cd(path);

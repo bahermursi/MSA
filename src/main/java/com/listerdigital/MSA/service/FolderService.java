@@ -9,10 +9,10 @@ public class Folderservice {
 	public Folderservice() throws IOException{
 		fd=new FolderDao();
 	}
-	public void removeFolder(String currentdir,String folder){
-		fd.createFolder(currentdir, folder);
+	public void removeFolder(String currentdir,String folder) throws IOException{
+		fd.removeFolder(currentdir, folder);
 	}
 	public void createFolder(String currentdir,String folder) throws IOException{
-		fd.removeFolder(currentdir, folder);
+		fd.createFolder(currentdir, folder);
 	}
 }

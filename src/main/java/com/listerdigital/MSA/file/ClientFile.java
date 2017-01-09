@@ -21,6 +21,7 @@ import oracle.jdbc.pool.OracleDataSource;
 import java.util.Properties;
 import javax.sql.DataSource;
 
+@SuppressWarnings("unused")
 public class ClientFile {
 	String user = "";
     String password = "";

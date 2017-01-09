@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.listerdigital.MSA.dao.UserDao;
 import com.listerdigital.MSA.domain.*;
 import com.listerdigital.MSA.repository.*;
 
@@ -27,6 +26,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.*;
 
+@SuppressWarnings("unused")
 public class UserMetadata {
 	public boolean getUser(User u) throws JsonParseException, JsonMappingException, IOException, CloneNotSupportedException{
 		FileReader fr=new FileReader();

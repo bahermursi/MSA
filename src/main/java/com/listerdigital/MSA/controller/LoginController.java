@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+//import com.listerdigital.MSA.dao.AWSConnection;
 import com.listerdigital.MSA.domain.*;
 import com.listerdigital.MSA.file.ClientFile;
  
@@ -48,6 +49,7 @@ public class LoginController {
         ClientFile clientfile=new ClientFile();
         List<Client> clientList=clientfile.getallClients();
         model.put("clientList", clientList);
+        //AWSConnection s3=new AWSConnection();
         return "LoginSuccess";
     }
     

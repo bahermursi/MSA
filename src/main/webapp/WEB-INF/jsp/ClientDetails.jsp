@@ -204,8 +204,7 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-lg-9">
-							<form:form id='myform' action="CreateClient"
-								modelAttribute="client">
+							<form:form id='myform' action="CreateClient" modelAttribute="client">
 								<div class='form_body' id='form'>
 									<ul>
 										<li><label>Name</label> <form:input id="name" path="name"

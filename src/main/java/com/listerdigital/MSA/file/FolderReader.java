@@ -35,9 +35,10 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
-import com.listerdigital.MSA.dao.ClientDao;
+import com.listerdigital.MSA.dao.ClientDaoTest;
 import com.listerdigital.MSA.domain.*;
 
+@SuppressWarnings("unused")
 public class FolderReader {
 	String user = "";
     String password = "";
@@ -49,6 +50,7 @@ public class FolderReader {
     File f;
     List<String> folderlist;
     Logger logger=LoggerFactory.getLogger(FolderReader.class);
+	@SuppressWarnings("unchecked")
 	public List<String> getFolders(String dir){
 	    try{
 	    	Class.forName("oracle.jdbc.driver.OracleDriver");

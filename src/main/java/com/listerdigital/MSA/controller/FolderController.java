@@ -27,6 +27,7 @@ import com.listerdigital.MSA.domain.*;
 import com.listerdigital.MSA.file.FolderReader;
 import com.listerdigital.MSA.service.Folderservice;
 
+@SuppressWarnings("unused")
 @Controller
 public class FolderController {
 	@RequestMapping(value="/managefolders")

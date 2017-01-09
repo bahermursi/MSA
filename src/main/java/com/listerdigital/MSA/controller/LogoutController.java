@@ -11,9 +11,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import com.listerdigital.MSA.dao.FolderDao;
+import com.listerdigital.MSA.dao.FolderDaoTest;
 import com.listerdigital.MSA.domain.User;
 
+@SuppressWarnings("unused")
 @Controller
 public class LogoutController {
 	@RequestMapping(value="/logout")

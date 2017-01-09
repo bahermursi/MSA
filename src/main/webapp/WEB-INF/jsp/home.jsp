@@ -56,8 +56,7 @@
                                 <li>
                                 	<form:errors path="username" cssClass="error"/>
                                 </li>
-                                <li>Password&nbsp;
-                                    <form:password cssClass="field" id="password" path="password" placeholder="        Enter your password" onfocus="foc(this.id)" onblur="focout(this.id)"/>
+                                <li>Password&nbsp;<form:password cssClass="field" id="password" path="password" placeholder="        Enter your password" onfocus="foc(this.id)" onblur="focout(this.id)"/>
                                 </li>
                                 <li>
                                 	<form:errors path="password" cssClass="error"/>
